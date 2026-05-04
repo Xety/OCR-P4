@@ -16,6 +16,29 @@ use DateTimeImmutable;
 final class UserRepository extends AbstractRepository
 {
     /**
+     * Crée un nouvel utilisateur et retourne son entité.
+     *
+     * @param string $name Pseudo de l'utilisateur
+     * @param string $email Adresse email
+     * @param string $password Mot de passe en clair (sera haché ici)
+     *
+     * @return UserEntity L'entité de l'utilisateur créé
+     */
+    public function create(string $name, string $email, string $password): UserEntity
+    {
+        $id = $this->execute(
+            sql: 'INSERT INTO users (name, email, password) VALUES (:name, :email, :password) RETURNING id',
+            bindings: [
+                'name' => $name,
+                'email' => $email,
+                'password' => password_hash($password, PASSWORD_BCRYPT),
+            ],
+        );
+
+        return $this->find((int) $id);
+    }
+
+    /**
     * Retourne un utilisateur par son adresse email, ou null si introuvable.
     *
     * @param string $email L'adresse email de l'utilisateur à rechercher.

@@ -81,4 +81,74 @@ final class AuthController extends AbstractController
         Auth::logout();
         Redirect::to('/login');
     }
+
+    /**
+     * Affiche le formulaire d'inscription.
+     * Redirige vers / si l'utilisateur est déjà connecté.
+     */
+    public function showRegister(Request $request): string
+    {
+        if (Auth::isAuthenticated()) {
+            Redirect::to('/');
+        }
+
+        return $this->view->render('auth/register', [
+            'title' => 'Inscription',
+            'mainClass' => 'main--full',
+        ]);
+    }
+
+    /**
+     * Traite le formulaire d'inscription (POST /register).
+     *
+     * Valide les champs, vérifie l'unicité de l'email,
+     * crée le compte et connecte l'utilisateur.
+     *
+     * @return string Le HTML à afficher (formulaire avec erreurs ou redirection)
+     */
+    public function register(Request $request): string
+    {
+        if (Auth::isAuthenticated()) {
+            Redirect::to('/');
+        }
+
+        $name = trim($request->body['name'] ?? '');
+        $email = trim($request->body['email'] ?? '');
+        $password = $request->body['password'] ?? '';
+        $confirm = $request->body['password_confirmation'] ?? '';
+
+        // Fonction de rendu d'erreur pour éviter la duplication de code dans les différents cas de validation.
+        $renderError = function (string $error) use ($name, $email): string {
+            return $this->view->render('auth/register', [
+                'title' => 'Inscription',
+                'mainClass' => 'main--full',
+                'error' => $error,
+                'old' => ['name' => $name, 'email' => $email],
+            ]);
+        };
+
+        if ($name === '' || $email === '' || $password === '') {
+            return $renderError('Veuillez remplir tous les champs.');
+        }
+
+        if (strlen($password) < 8) {
+            return $renderError('Le mot de passe doit contenir au moins 8 caractères.');
+        }
+
+        if ($password !== $confirm) {
+            return $renderError('Les mots de passe ne correspondent pas.');
+        }
+
+        $repo = new UserRepository($this->db);
+
+        if ($repo->findByEmail($email) !== null) {
+            return $renderError('Cette adresse email est déjà utilisée.');
+        }
+
+        $user = $repo->create($name, $email, $password);
+
+        Auth::login($user);
+
+        Redirect::to('/');
+    }
 }

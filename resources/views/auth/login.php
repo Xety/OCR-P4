@@ -1,7 +1,7 @@
 <?php
 
 /** @var string|null $error */
-/** @var string      $title */
+/** @var string $title */
 
 ?>
 

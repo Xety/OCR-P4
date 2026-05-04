@@ -69,6 +69,8 @@ final class Application
         $authController = new AuthController($this->view, $this->db);
         $this->router->get('/login', $authController->showLogin(...));
         $this->router->post('/login', $authController->login(...));
+        $this->router->get('/register', $authController->showRegister(...));
+        $this->router->post('/register', $authController->register(...));
         $this->router->get('/logout', $authController->logout(...));
     }
 }
