@@ -1,0 +1,50 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Core;
+
+/**
+ * Représente la requête HTTP courante.
+ *
+ * Encapsule les superglobales $_SERVER, $_GET et $_POST
+ * pour éviter d'y accéder directement dans le reste du code.
+ */
+final class Request
+{
+    /**
+     *  L'URI de la requête, sans les paramètres de requête.
+     *
+     * @var string
+     */
+    public readonly string $uri;
+    /**
+     *  La méthode HTTP de la requête.
+     *
+     * @var HttpMethod
+     */
+    public readonly HttpMethod $method;
+
+    /**
+     *  Les paramètres de requête (query string).
+     *
+     * @var array<string, string>
+     */
+    public readonly array $query;
+
+    /**
+     *  Les paramètres de la requête (body).
+     *
+     * @var array<string, string>
+     */
+    public readonly array $body;
+
+    public function __construct()
+    {
+        $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
+        $this->uri = parse_url($rawUri, PHP_URL_PATH) ?: '/';
+        $this->method = HttpMethod::from(strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET'));
+        $this->query = $_GET;
+        $this->body = $_POST;
+    }
+}
