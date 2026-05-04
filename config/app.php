@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
-    'name' => $_ENV['APP_NAME'] ?? 'OCR-P4',
-    'env' => $_ENV['APP_ENV'] ?? 'production',
+    /**
+     * Nom de l'application, utilisé pour l'affichage et les logs. Par défaut, 'Tom Troc'.
+     */
+    'name' => $_ENV['APP_NAME'] ?? 'Tom Troc',
 ];

@@ -16,7 +16,7 @@ final class View implements RendererInterface
 
     public function __construct(private readonly string $basePath)
     {
-        $this->viewsPath = $this->basePath . '/resources/views';
+        $this->viewsPath = $this->basePath . '/' . config('view.views_path', 'resources/views');
     }
 
     /**
@@ -41,7 +41,7 @@ final class View implements RendererInterface
         $content = $this->renderTemplate($viewFile, $data);
 
         // Injecte le contenu dans le layout principal
-        $layoutFile = $this->viewsPath . '/layout.php';
+        $layoutFile = $this->viewsPath . '/' . config('view.layout', 'layout.php');
 
         return $this->renderTemplate($layoutFile, array_merge($data, ['content' => $content]));
     }
