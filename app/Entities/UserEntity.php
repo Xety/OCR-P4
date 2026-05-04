@@ -15,7 +15,7 @@ final class UserEntity
         public readonly int $id,
         public readonly string $name,
         public readonly string $email,
-        public readonly ?string $password = null,
         public readonly DateTimeImmutable $createdAt,
+        public readonly ?string $password = null,
     ) {}
 }
