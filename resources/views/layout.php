@@ -15,7 +15,7 @@
 
         <?php require __DIR__ . '/partials/header.php'; ?>
 
-        <main class="main">
+        <main class="main <?= $mainClass ?? '' ?>">
             <?= $content ?>
         </main>
 

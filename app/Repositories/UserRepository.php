@@ -16,6 +16,33 @@ use DateTimeImmutable;
 final class UserRepository extends AbstractRepository
 {
     /**
+    * Retourne un utilisateur par son adresse email, ou null si introuvable.
+    *
+    * @param string $email L'adresse email de l'utilisateur à rechercher.
+    *
+    * @return UserEntity|null L'entité utilisateur correspondante, ou null si aucune correspondance.
+    */
+    public function findByEmail(string $email): ?UserEntity
+    {
+        $row = $this->selectOne(
+            sql: 'SELECT id, name, email, password, created_at FROM users WHERE email = :email',
+            bindings: ['email' => $email],
+        );
+
+        if ($row === null) {
+            return null;
+        }
+
+        return new UserEntity(
+            id: (int) $row['id'],
+            name: (string) $row['name'],
+            email: (string) $row['email'],
+            createdAt: new DateTimeImmutable((string) $row['created_at']),
+            // On hydrate aussi le hash de mot de passe pour la vérification lors de la connexion.
+            password: (string) $row['password'],
+        );
+    }
+    /**
      * Retourne tous les utilisateurs triés par identifiant.
      *
      * @return array<int, UserEntity>

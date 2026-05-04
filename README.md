@@ -104,9 +104,3 @@ cp .env.example .env
 # 3. Créer la base de données PostgreSQL puis exécuter le schéma
 psql -U postgres -d ocr_p4 -f database/schema.sql
 ```
-
-Configurer un virtual host ou utiliser le serveur intégré PHP :
-
-```bash
-php -S localhost:8000 -t public
-```

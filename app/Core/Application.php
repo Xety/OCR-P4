@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use App\Controllers\AuthController;
 use App\Controllers\PageController;
 use PDO;
 
@@ -62,7 +63,12 @@ final class Application
     private function registerRoutes(): void
     {
         $pageController = new PageController($this->view, $this->db);
-
         $this->router->get('/', $pageController->index(...));
+
+
+        $authController = new AuthController($this->view, $this->db);
+        $this->router->get('/login', $authController->showLogin(...));
+        $this->router->post('/login', $authController->login(...));
+        $this->router->get('/logout', $authController->logout(...));
     }
 }

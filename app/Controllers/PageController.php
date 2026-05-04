@@ -4,21 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Contracts\RendererInterface;
 use App\Core\Request;
-use PDO;
 
 /**
  * Contrôleur pour les pages.
- *
- * Reçoit ses dépendances par injection de constructeur.
  */
-final class PageController
+final class PageController extends AbstractController
 {
-    public function __construct(
-        private readonly RendererInterface $view,
-        private readonly PDO $db,
-    ) {}
 
     /**
      * Affiche la page d'accueil.

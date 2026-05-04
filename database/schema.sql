@@ -1,10 +1,15 @@
--- Schema de la base de données OCR-P4
--- À exécuter manuellement : psql -U postgres -d ocr_p4 -f database/schema.sql
--- Pour les données de démonstration : php database/seed.php
+-- Sequence and defined type
+CREATE SEQUENCE IF NOT EXISTS users_id_seq;
 
-CREATE TABLE IF NOT EXISTS users (
-    id         SERIAL PRIMARY KEY,
-    name       VARCHAR(100)  NOT NULL,
-    email      VARCHAR(255)  NOT NULL UNIQUE,
-    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+DROP TABLE IF EXISTS "users";
+-- Table Definition
+CREATE TABLE "users" (
+    "id" int4 NOT NULL DEFAULT nextval('users_id_seq'::regclass),
+    "name" varchar(100) NOT NULL,
+    "email" varchar(255) NOT NULL,
+    "password" varchar(255) NOT NULL,
+    "created_at" timestamp DEFAULT now(),
+    PRIMARY KEY ("id")
 );
+-- Indices
+CREATE UNIQUE INDEX users_email_key ON users USING btree (email);
