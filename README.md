@@ -42,8 +42,8 @@ Router::dispatch(Request)
     │     └─ introuvable → http_response_code(404) + message d'erreur
     │
 UserController::index(Request)    ← handler trouvé
-    │  ├─ new User($db)            → instancie le modèle avec la connexion PDO
-    │  ├─ $user->all()             → exécute SELECT en base, retourne array<User>
+    │  ├─ UserRepository::all()    → exécute SELECT en base
+    │  │    retourne array<UserEntity> (objets readonly immuables)
     │  └─ $this->view->render('users/index', ['users' => $users, ...])
     │
 View::render(string $view, array $data)
@@ -59,31 +59,24 @@ Router::dispatch()
 Navigateur affiche la page
 ```
 
-### En résumé
-
-1. **`public/index.php`** — seul fichier accessible depuis le web. Il délègue immédiatement.
-2. **`bootstrap/app.php`** — prépare l'environnement et construit l'`Application`.
-3. **`Application`** — orchestre les dépendances (PDO, View, Router) et enregistre les routes.
-4. **`Router`** — fait correspondre `[méthode][URI]` à un callable et l'exécute.
-5. **`Request`** — encapsule les données de la requête HTTP (immuable, readonly).
-6. **`Controller`** — reçoit la `Request`, interroge le modèle, demande à la vue de rendre le résultat.
-7. **`Model`** — exécute les requêtes SQL via PDO et retourne des objets typés.
-8. **`View`** — assemble le contenu de la vue dans le layout et retourne le HTML final.
-
 ---
 
 ## Structure des dossiers
 
 ```
 app/
+├── Contracts/     Interfaces (RendererInterface, ModelInterface)
 ├── Controllers/   Contrôleurs (un par ressource)
 ├── Core/          Noyau du framework (Application, Router, View, Request, Database…)
+├── Entities/      Objets de données immuables (readonly, sans PDO)
 ├── Enums/         Énumérations PHP (HttpMethod)
-├── Models/        Modèles Eloquent-like (accès base de données)
+├── helpers.php    Fonctions globales (config())
+└── Repositories/  Accès base de données — retournent des Entities
 bootstrap/
 └── app.php        Point de démarrage : charge .env et instancie Application
 config/
-└── app.php        Helper config() — lit les variables d'environnement
+├── app.php        Configuration application (name, env…)
+└── db.php         Configuration base de données (host, port, name…)
 database/
 └── schema.sql     Schéma SQL à exécuter manuellement
 public/
