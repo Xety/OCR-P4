@@ -41,8 +41,8 @@ final class Auth
         session_regenerate_id(delete_old_session: true);
 
         $_SESSION[self::SESSION_KEY] = [
-            'id'    => $user->id,
-            'name'  => $user->name,
+            'id' => $user->id,
+            'name' => $user->name,
             'email' => $user->email,
         ];
     }

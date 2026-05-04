@@ -177,10 +177,11 @@ body {
 }
 
 .auth-split__title {
-    font-size: 2rem;
-    font-weight: 600;
+    font-family: "Playfair Display", serif;
+    font-size: 36px;
+    font-weight: 400;
     color: var(--primary-color);
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 
 .auth-split__image {
@@ -188,7 +189,7 @@ body {
     overflow: hidden;
     position: sticky;
     top: 0;
-    height: 100vh;
+    height: calc(100vh - 80px - 60px); /* 80px = hauteur du header, 60px = hauteur du footer */
     align-self: flex-start;
 }
 
@@ -201,17 +202,12 @@ body {
 
 .auth-split__footer {
     margin-top: 1.25rem;
-    font-size: 0.875rem;
-    color: var(--secondary-color);
+    font-size: 14px;
 }
 
 .auth-split__link {
     color: var(--primary-color);
     text-decoration: underline;
-}
-
-.auth-split__link:hover {
-    color: var(--cta-color);
 }
 
 /* ============================================================
@@ -225,15 +221,15 @@ body {
 }
 
 .form-label {
-    font-size: 0.8rem;
+    font-size:14px;
     color: var(--secondary-color);
 }
 
 .form-input {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 1rem;
     border: 1px solid #D9D9D9;
-    border-radius: 8px;
+    border-radius: 6px;
     background-color: #fff;
     font-size: 0.95rem;
     font-family: inherit;
@@ -252,7 +248,7 @@ body {
 .btn {
     display: inline-block;
     width: 100%;
-    padding: 0.85rem 1.5rem;
+    padding: 22px 38px;
     border: none;
     border-radius: 8px;
     font-size: 0.95rem;
@@ -386,5 +382,20 @@ body {
         flex-direction: column;
         align-items: center;
         gap: 1.25rem;
+    }
+
+    /* Auth — mobile */
+    .auth-split {
+        flex-direction: column;
+    }
+
+    .auth-split__panel {
+        flex: none;
+        padding: 8rem 1.5rem;
+    }
+
+    .auth-split__image {
+        flex: none;
+        height: 100%;
     }
 }

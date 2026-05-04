@@ -60,7 +60,7 @@ final class AuthController extends AbstractController
         $user = (new UserRepository($this->db))->findByEmail($email);
 
         // Comparaison constante pour éviter les timing attacks (OWASP A02)
-        if ($user === null || ! password_verify($password, $user->passwordHash ?? '')) {
+        if ($user === null || ! password_verify($password, $user->password ?? '')) {
             return $this->view->render('auth/login', [
                 'title'     => 'Connexion',
                 'mainClass' => 'main--full',

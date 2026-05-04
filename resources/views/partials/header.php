@@ -1,3 +1,6 @@
+<?php
+use App\Core\Auth;
+?>
 <header class="header">
     <a href="/" class="header__brand">
         <img src="/images/logo.svg" alt="Logo de TomTroc" class="header__logo" />
@@ -18,7 +21,11 @@
             <img src="/images/icon-user.svg" alt="Icon User" />
             Mon compte
         </a>
+        <?php if (Auth::isAuthenticated()): ?>
+            <a href="/logout" class="header__action">Déconnexion</a>
+        <?php else: ?>
         <a href="/login" class="header__action">Connexion</a>
+        <?php endif; ?>
     </div>
 
     <button class="header__burger" id="header-burger" aria-label="Ouvrir le menu" aria-expanded="false">

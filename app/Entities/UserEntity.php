@@ -12,10 +12,10 @@ use DateTimeImmutable;
 final class UserEntity
 {
     public function __construct(
-        public readonly int               $id,
-        public readonly string            $name,
-        public readonly string            $email,
+        public readonly int $id,
+        public readonly string $name,
+        public readonly string $email,
+        public readonly ?string $password = null,
         public readonly DateTimeImmutable $createdAt,
-        public readonly ?string           $password = null,
     ) {}
 }
