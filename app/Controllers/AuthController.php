@@ -8,6 +8,11 @@ use App\Core\Auth;
 use App\Core\Redirect;
 use App\Core\Request;
 use App\Repositories\UserRepository;
+use App\Validation\Rules\Email;
+use App\Validation\Rules\MinLength;
+use App\Validation\Rules\Confirmed;
+use App\Validation\Rules\Required;
+use App\Validation\Validator;
 
 /**
  * Gère l'authentification : formulaire de connexion, traitement POST et déconnexion.
@@ -49,23 +54,30 @@ final class AuthController extends AbstractController
         $email = trim($request->body['email'] ?? '');
         $password = $request->body['password'] ?? '';
 
-        if ($email === '' || $password === '') {
+        // Fonction de rendu en cas d'erreur, pour éviter la duplication de code
+        $renderError = function (string $error) use ($email): string {
             return $this->view->render('auth/login', [
                 'title' => 'Connexion',
                 'mainClass' => 'main--full',
-                'error' => 'Veuillez remplir tous les champs.',
+                'error' => $error,
+                'old' => ['email' => $email],
             ]);
+        };
+
+        $validator = new Validator($request->body, [
+            'email'    => [new Required(), new Email()],
+            'password' => [new Required()],
+        ]);
+
+        if ($validator->fails()) {
+            return $renderError($validator->firstError());
         }
 
         $user = (new UserRepository($this->db))->findByEmail($email);
 
         // Comparaison constante pour éviter les timing attacks (OWASP A02)
         if ($user === null || ! password_verify($password, $user->password ?? '')) {
-            return $this->view->render('auth/login', [
-                'title'     => 'Connexion',
-                'mainClass' => 'main--full',
-                'error'     => 'Identifiants incorrects.',
-            ]);
+            return $renderError('Identifiants invalides.');
         }
 
         Auth::login($user);
@@ -115,9 +127,8 @@ final class AuthController extends AbstractController
         $name = trim($request->body['name'] ?? '');
         $email = trim($request->body['email'] ?? '');
         $password = $request->body['password'] ?? '';
-        $confirm = $request->body['password_confirmation'] ?? '';
 
-        // Fonction de rendu d'erreur pour éviter la duplication de code dans les différents cas de validation.
+        // Fonction de rendu en cas d'erreur, pour éviter la duplication de code
         $renderError = function (string $error) use ($name, $email): string {
             return $this->view->render('auth/register', [
                 'title' => 'Inscription',
@@ -127,16 +138,16 @@ final class AuthController extends AbstractController
             ]);
         };
 
-        if ($name === '' || $email === '' || $password === '') {
-            return $renderError('Veuillez remplir tous les champs.');
-        }
+        // Validation des champs
+        $validator = new Validator($request->body, [
+            'name' => [new Required()],
+            'email' => [new Required(), new Email()],
+            'password' => [new Required(), new MinLength(8)],
+            'password_confirmation' => [new Confirmed('password')],
+        ]);
 
-        if (strlen($password) < 8) {
-            return $renderError('Le mot de passe doit contenir au moins 8 caractères.');
-        }
-
-        if ($password !== $confirm) {
-            return $renderError('Les mots de passe ne correspondent pas.');
+        if ($validator->fails()) {
+            return $renderError($validator->firstError());
         }
 
         $repo = new UserRepository($this->db);
