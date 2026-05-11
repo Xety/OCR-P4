@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Core\ORM\AbstractRepository;
 use App\Entities\UserEntity;
 use DateTimeImmutable;
 
@@ -16,29 +17,6 @@ use DateTimeImmutable;
 final class UserRepository extends AbstractRepository
 {
     /**
-     * Crée un nouvel utilisateur et retourne son entité.
-     *
-     * @param string $name Pseudo de l'utilisateur
-     * @param string $email Adresse email
-     * @param string $password Mot de passe en clair (sera haché ici)
-     *
-     * @return UserEntity L'entité de l'utilisateur créé
-     */
-    public function create(string $name, string $email, string $password): UserEntity
-    {
-        $id = $this->execute(
-            sql: 'INSERT INTO users (name, email, password) VALUES (:name, :email, :password) RETURNING id',
-            bindings: [
-                'name' => $name,
-                'email' => $email,
-                'password' => password_hash($password, PASSWORD_BCRYPT),
-            ],
-        );
-
-        return $this->find((int) $id);
-    }
-
-    /**
     * Retourne un utilisateur par son adresse email, ou null si introuvable.
     *
     * @param string $email L'adresse email de l'utilisateur à rechercher.
@@ -47,91 +25,42 @@ final class UserRepository extends AbstractRepository
     */
     public function findByEmail(string $email): ?UserEntity
     {
-        $row = $this->selectOne(
-            sql: 'SELECT id, name, email, password, created_at FROM users WHERE email = :email',
-            bindings: ['email' => $email],
-        );
-
-        if ($row === null) {
-            return null;
-        }
-
-        return new UserEntity(
-            id: (int) $row['id'],
-            name: (string) $row['name'],
-            email: (string) $row['email'],
-            createdAt: new DateTimeImmutable((string) $row['created_at']),
-            // On hydrate aussi le hash de mot de passe pour la vérification lors de la connexion.
-            password: (string) $row['password'],
-        );
-    }
-    /**
-     * Retourne tous les utilisateurs triés par identifiant.
-     *
-     * @return array<int, UserEntity>
-     */
-    public function all(): array
-    {
-        $rows = $this->select('SELECT id, name, email, created_at FROM users ORDER BY id ASC');
-
-        return array_map(fn(array $row) => $this->hydrate($row), $rows);
+        return $this->findOneBy(['email' => $email]);
     }
 
     /**
-     * Retourne un utilisateur par son identifiant, ou null si introuvable.
+     * Retourne un utilisateur avec son mot de passe hydraté (pour l'authentification uniquement).
+     *
+     * @param string $email L'adresse email de l'utilisateur.
+     *
+     * @return UserEntity|null L'entité avec le mot de passe renseigné, ou null si introuvable.
      */
-    public function find(int $id): ?UserEntity
+    public function findByEmailForAuth(string $email): ?UserEntity
     {
-        $row = $this->selectOne(
-            sql: 'SELECT id, name, email, created_at FROM users WHERE id = :id',
-            bindings: ['id' => $id],
+        $meta = UserEntity::metadata();
+        $stmt = $this->pdo->prepare(
+            sprintf('SELECT * FROM %s WHERE email = :email LIMIT 1', $meta['table'])
         );
+        $stmt->execute(['email' => $email]);
 
-        return $row !== null ? $this->hydrate($row) : null;
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $row !== false ? UserEntity::fromRow($row, withHidden: true) : null;
     }
 
     /**
-     * Met à jour le profil d'un utilisateur.
+     * Met à jour uniquement le mot de passe d'un utilisateur.
      *
-     * @param int $id Identifiant de l'utilisateur
-     * @param string $name Nouveau pseudo
-     * @param string $email Nouvel email
-     * @param string|null $password Nouveau mot de passe en clair, ou null pour ne pas le modifier
+     * @param int $id L'identifiant de l'utilisateur.
+     *
+     * @param string $hash Le nouveau hash bcrypt du mot de passe.
      */
-    public function updateProfile(int $id, string $name, string $email, ?string $password = null): void
+    public function updatePassword(int $id, string $hash): void
     {
-        if ($password !== null) {
-            $this->execute(
-                sql: 'UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id',
-                bindings: [
-                    'name'     => $name,
-                    'email'    => $email,
-                    'password' => password_hash($password, PASSWORD_BCRYPT),
-                    'id'       => $id,
-                ],
-            );
-        } else {
-            $this->execute(
-                sql: 'UPDATE users SET name = :name, email = :email WHERE id = :id',
-                bindings: ['name' => $name, 'email' => $email, 'id' => $id],
-            );
-        }
-    }
-
-    /**
-     * Hydrate une UserEntity depuis une ligne PDO.
-     *
-     * @param array $row Une ligne de résultat PDO associatif contenant les champs d'un utilisateur.
-     *
-     * @return UserEntity L'entité utilisateur correspondante à la ligne de données.
-     */
-    private function hydrate(array $row): UserEntity
-    {
-        return new UserEntity(
-            id: (int) $row['id'],
-            name: (string) $row['name'],
-            email: (string) $row['email'],
-            createdAt: new DateTimeImmutable((string) $row['created_at']),
+        $meta = UserEntity::metadata();
+        $stmt = $this->pdo->prepare(
+            sprintf('UPDATE %s SET password = :password WHERE id = :id', $meta['table'])
         );
+        $stmt->execute(['password' => $hash, 'id' => $id]);
     }
 }

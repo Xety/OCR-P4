@@ -7,12 +7,14 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Redirect;
 use App\Core\Request;
+use App\Entities\UserEntity;
 use App\Repositories\UserRepository;
 use App\Validation\Rules\Email;
 use App\Validation\Rules\MinLength;
 use App\Validation\Rules\Confirmed;
 use App\Validation\Rules\Required;
 use App\Validation\Validator;
+use DateTime;
 
 /**
  * Gère l'authentification : formulaire de connexion, traitement POST et déconnexion.
@@ -73,10 +75,10 @@ final class AuthController extends AbstractController
             return $renderError($validator->firstError());
         }
 
-        $user = (new UserRepository($this->db))->findByEmail($email);
+        $user = (new UserRepository($this->db))->findByEmailForAuth($email);
 
         // Comparaison constante pour éviter les timing attacks (OWASP A02)
-        if ($user === null || ! password_verify($password, $user->password ?? '')) {
+        if ($user === null || ! password_verify($password, $user->getPassword() ?? '')) {
             return $renderError('Identifiants invalides.');
         }
 
@@ -156,7 +158,14 @@ final class AuthController extends AbstractController
             return $renderError('Cette adresse email est déjà utilisée.');
         }
 
-        $user = $repo->create($name, $email, $password);
+        $user = new UserEntity([
+            'name' => $name,
+            'email' => $email,
+            'createdAt' => new DateTime(),
+            'password' => password_hash($password, PASSWORD_BCRYPT),
+        ]);
+
+        $user = $repo->save($user);
 
         Auth::login($user);
 

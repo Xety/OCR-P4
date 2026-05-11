@@ -34,7 +34,7 @@ final class AccountController extends AbstractController
 
         $books = (new BookRepository($this->db))->findByUserId($authData['id']);
 
-        $memberSince = $this->memberSince($user->createdAt);
+        $memberSince = $this->memberSince($user->getCreatedAt());
 
         // Récupération du message flash éventuel
         $success = null;
@@ -45,7 +45,6 @@ final class AccountController extends AbstractController
 
         return $this->view->render('pages/account', [
             'title'=> 'Mon compte',
-            'mainClass'=> 'main--wide',
             'user'=> $user,
             'books'=> $books,
             'memberSince'=> $memberSince,
@@ -89,12 +88,11 @@ final class AccountController extends AbstractController
         $user = $userRepo->find($userId);
         $books = (new BookRepository($this->db))->findByUserId($userId);
 
-        $memberSince = $this->memberSince($user->createdAt);
+        $memberSince = $this->memberSince($user->getCreatedAt());
 
         $renderError = function (string $error) use ($user, $books, $memberSince, $name, $email): string {
             return $this->view->render('pages/account', [
                 'title'=> 'Mon compte',
-                'mainClass'=> 'main--wide',
                 'user'=> $user,
                 'books'=> $books,
                 'memberSince'=> $memberSince,
@@ -108,14 +106,23 @@ final class AccountController extends AbstractController
         }
 
         // Vérification d'unicité de l'email si modifié
-        if ($email !== $user->email) {
+        if ($email !== $user->getEmail()) {
             $existing = $userRepo->findByEmail($email);
-            if ($existing !== null && $existing->id !== $userId) {
+            if ($existing !== null && $existing->getId() !== $userId) {
                 return $renderError('Cette adresse email est déjà utilisée.');
             }
         }
 
-        $userRepo->updateProfile($userId, $name, $email, $password !== '' ? $password : null);
+        $user->fill([
+            'name' => $name,
+            'email' => $email,
+        ]);
+
+        $userRepo->save($user);
+
+        if ($password !== '') {
+            $userRepo->updatePassword($userId, password_hash($password, PASSWORD_BCRYPT));
+        }
 
         // Mise à jour de la session avec les nouvelles données
         $updatedUser = $userRepo->find($userId);

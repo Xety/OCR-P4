@@ -18,7 +18,7 @@
         <div class="account-avatar">
             <img
                 src="/images/icon-user.svg"
-                alt="Avatar de <?= htmlspecialchars($user->name) ?>"
+                alt="Avatar de <?= htmlspecialchars($user->getName()) ?>"
                 class="account-avatar__img"
             />
         </div>
@@ -26,7 +26,7 @@
 
         <hr class="account-profile__sep" />
 
-        <p class="account-profile__name"><?= htmlspecialchars($user->name) ?></p>
+        <p class="account-profile__name"><?= htmlspecialchars($user->getName()) ?></p>
         <p class="account-profile__since">Membre depuis <?= htmlspecialchars($memberSince) ?></p>
 
         <div class="account-profile__library">
@@ -58,7 +58,7 @@
                     id="email"
                     name="email"
                     class="form-input"
-                    value="<?= htmlspecialchars($old['email'] ?? $user->email) ?>"
+                    value="<?= htmlspecialchars($old['email'] ?? $user->getEmail()) ?>"
                     required
                 />
             </div>
@@ -81,7 +81,7 @@
                     id="name"
                     name="name"
                     class="form-input"
-                    value="<?= htmlspecialchars($old['name'] ?? $user->name) ?>"
+                    value="<?= htmlspecialchars($old['name'] ?? $user->getName()) ?>"
                     required
                 />
             </div>
@@ -116,29 +116,29 @@
                 <?php foreach ($books as $book): ?>
                     <tr class="table-books__row">
                         <td class="table-books__td">
-                            <?php if ($book->photo !== null): ?>
+                            <?php if ($book->getPhoto() !== null): ?>
                                 <img
-                                    src="<?= htmlspecialchars($book->photo) ?>"
-                                    alt="<?= htmlspecialchars($book->title) ?>"
+                                    src="<?= htmlspecialchars($book->getPhoto()) ?>"
+                                    alt="<?= htmlspecialchars($book->getTitle()) ?>"
                                     class="table-books__photo"
                                 />
                             <?php else: ?>
                                 <div class="table-books__photo table-books__photo--placeholder"></div>
                             <?php endif; ?>
                         </td>
-                        <td class="table-books__td table-books__title"><?= htmlspecialchars($book->title) ?></td>
-                        <td class="table-books__td table-books__author"><?= htmlspecialchars($book->author) ?></td>
+                        <td class="table-books__td table-books__title"><?= htmlspecialchars($book->getTitle()) ?></td>
+                        <td class="table-books__td table-books__author"><?= htmlspecialchars($book->getAuthor()) ?></td>
                         <td class="table-books__td table-books__desc">
-                            <?= htmlspecialchars(mb_strimwidth($book->description, 0, 90, '…')) ?>
+                            <?= htmlspecialchars(mb_strimwidth($book->getDescription(), 0, 90, '…')) ?>
                         </td>
                         <td class="table-books__td table-books__badge">
-                            <span class="badge <?= $book->isAvailable ? 'badge--available' : 'badge--unavailable' ?>">
-                                <?= $book->isAvailable ? 'disponible' : 'non dispo.' ?>
+                            <span class="badge <?= $book->getIsAvailable() ? 'badge--available' : 'badge--unavailable' ?>">
+                                <?= $book->getIsAvailable() ? 'disponible' : 'non dispo.' ?>
                             </span>
                         </td>
                         <td class="table-books__td table-books__actions">
-                            <a href="/books/<?= $book->id ?>/edit" class="table-books__action">Éditer</a>
-                            <a href="/books/<?= $book->id ?>/delete" class="table-books__action table-books__action--delete">Supprimer</a>
+                            <a href="/books/<?= $book->getId() ?>/edit" class="table-books__action">Éditer</a>
+                            <a href="/books/<?= $book->getId() ?>/delete" class="table-books__action table-books__action--delete">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
