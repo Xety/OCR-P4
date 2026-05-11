@@ -2,6 +2,22 @@
 
 declare(strict_types=1);
 
+use App\Core\Helpers\StringHelper;
+
+/**
+ * Échappe une valeur pour un affichage sécurisé en HTML (XSS).
+ *
+ * Raccourci vers StringHelper::escape().
+ *
+ * @param string $value La valeur à échapper.
+ *
+ * @return string La valeur échappée.
+ */
+function e(string $value): string
+{
+    return StringHelper::escape($value);
+}
+
 /**
  * Retourne une valeur de configuration depuis les fichiers config/*.php.
  *

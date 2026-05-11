@@ -16,7 +16,7 @@ $old = $old ?? [];
             <h1 class="auth-split__title">Inscription</h1>
 
             <?php if (isset($error)): ?>
-                <div class="alert alert--error"><?= htmlspecialchars($error) ?></div>
+                <div class="alert alert--error"><?= e($error) ?></div>
             <?php endif; ?>
 
             <form method="POST" action="/register">
@@ -28,7 +28,7 @@ $old = $old ?? [];
                         type="text"
                         id="name"
                         name="name"
-                        value="<?= htmlspecialchars($old['name'] ?? '') ?>"
+                        value="<?= e($old['name'] ?? '') ?>"
                         required
                         autofocus
                     >
@@ -41,7 +41,7 @@ $old = $old ?? [];
                         type="email"
                         id="email"
                         name="email"
-                        value="<?= htmlspecialchars($old['email'] ?? '') ?>"
+                        value="<?= e($old['email'] ?? '') ?>"
                         required
                     >
                 </div>

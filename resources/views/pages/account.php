@@ -18,7 +18,7 @@
         <div class="account-avatar">
             <img
                 src="/images/icon-user.svg"
-                alt="Avatar de <?= htmlspecialchars($user->getName()) ?>"
+                alt="Avatar de <?= e($user->getName()) ?>"
                 class="account-avatar__img"
             />
         </div>
@@ -26,8 +26,8 @@
 
         <hr class="account-profile__sep" />
 
-        <p class="account-profile__name"><?= htmlspecialchars($user->getName()) ?></p>
-        <p class="account-profile__since">Membre depuis <?= htmlspecialchars($memberSince) ?></p>
+        <p class="account-profile__name"><?= e($user->getName()) ?></p>
+        <p class="account-profile__since">Membre depuis <?= e($memberSince) ?></p>
 
         <div class="account-profile__library">
             <span class="account-profile__library-label">Bibliothèque</span>
@@ -43,11 +43,11 @@
         <h3 class="account-form__title">Vos informations personnelles</h3>
 
         <?php if (! empty($success)): ?>
-            <div class="alert alert--success"><?= htmlspecialchars($success) ?></div>
+            <div class="alert alert--success"><?= e($success) ?></div>
         <?php endif; ?>
 
         <?php if (! empty($error)): ?>
-            <div class="alert alert--error"><?= htmlspecialchars($error) ?></div>
+            <div class="alert alert--error"><?= e($error) ?></div>
         <?php endif; ?>
 
         <form method="POST" action="/account">
@@ -58,7 +58,7 @@
                     id="email"
                     name="email"
                     class="form-input"
-                    value="<?= htmlspecialchars($old['email'] ?? $user->getEmail()) ?>"
+                    value="<?= e($old['email'] ?? $user->getEmail()) ?>"
                     required
                 />
             </div>
@@ -81,7 +81,7 @@
                     id="name"
                     name="name"
                     class="form-input"
-                    value="<?= htmlspecialchars($old['name'] ?? $user->getName()) ?>"
+                    value="<?= e($old['name'] ?? $user->getName()) ?>"
                     required
                 />
             </div>
@@ -118,18 +118,18 @@
                         <td class="table-books__td">
                             <?php if ($book->getPhoto() !== null): ?>
                                 <img
-                                    src="<?= htmlspecialchars($book->getPhoto()) ?>"
-                                    alt="<?= htmlspecialchars($book->getTitle()) ?>"
+                                    src="<?= e($book->getPhoto()) ?>"
+                                    alt="<?= e($book->getTitle()) ?>"
                                     class="table-books__photo"
                                 />
                             <?php else: ?>
                                 <div class="table-books__photo table-books__photo--placeholder"></div>
                             <?php endif; ?>
                         </td>
-                        <td class="table-books__td table-books__title"><?= htmlspecialchars($book->getTitle()) ?></td>
-                        <td class="table-books__td table-books__author"><?= htmlspecialchars($book->getAuthor()) ?></td>
+                        <td class="table-books__td table-books__title"><?= e($book->getTitle()) ?></td>
+                        <td class="table-books__td table-books__author"><?= e($book->getAuthor()) ?></td>
                         <td class="table-books__td table-books__desc">
-                            <?= htmlspecialchars(mb_strimwidth($book->getDescription(), 0, 90, '…')) ?>
+                            <?= e(mb_strimwidth($book->getDescription(), 0, 90, '…')) ?>
                         </td>
                         <td class="table-books__td table-books__badge">
                             <span class="badge <?= $book->getIsAvailable() ? 'badge--available' : 'badge--unavailable' ?>">

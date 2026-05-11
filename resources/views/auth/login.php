@@ -13,11 +13,11 @@
             <h1 class="auth-split__title">Connexion</h1>
 
             <?php if (isset($error)): ?>
-                <div class="alert alert--error"><?= htmlspecialchars($error) ?></div>
+                <div class="alert alert--error"><?= e($error) ?></div>
             <?php endif; ?>
 
             <form method="POST" action="/login">
-                <input type="hidden" name="_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                <input type="hidden" name="_token" value="<?= e($_SESSION['csrf_token'] ?? '') ?>">
 
                 <div class="form-group">
                     <label class="form-label" for="email">Adresse email</label>
@@ -26,7 +26,7 @@
                         type="email"
                         id="email"
                         name="email"
-                        value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                        value="<?= e($_POST['email'] ?? '') ?>"
                         required
                         autofocus
                     >

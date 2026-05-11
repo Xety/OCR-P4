@@ -1,5 +1,5 @@
 <div class="page-header">
     <h2 class="page-header__title">
-        <?= htmlspecialchars($title) ?>
+        <?= e($title) ?>
     </h2>
 </div>
