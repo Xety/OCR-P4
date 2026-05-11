@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\Auth;
+use App\Core\Helpers\DateHelper;
 use App\Core\Redirect;
 use App\Core\Request;
 use App\Repositories\BookRepository;
@@ -13,7 +14,6 @@ use App\Validation\Rules\Email;
 use App\Validation\Rules\MinLength;
 use App\Validation\Rules\Required;
 use App\Validation\Validator;
-use DateTimeImmutable;
 
 final class AccountController extends AbstractController
 {
@@ -34,7 +34,7 @@ final class AccountController extends AbstractController
 
         $books = (new BookRepository($this->db))->findByUserId($authData['id']);
 
-        $memberSince = $this->memberSince($user->getCreatedAt());
+        $memberSince = DateHelper::elapsed($user->getCreatedAt());
 
         // Récupération du message flash éventuel
         $success = null;
@@ -88,7 +88,7 @@ final class AccountController extends AbstractController
         $user = $userRepo->find($userId);
         $books = (new BookRepository($this->db))->findByUserId($userId);
 
-        $memberSince = $this->memberSince($user->getCreatedAt());
+        $memberSince = DateHelper::elapsed($user->getCreatedAt());
 
         $renderError = function (string $error) use ($user, $books, $memberSince, $name, $email): string {
             return $this->view->render('pages/account', [
@@ -130,27 +130,5 @@ final class AccountController extends AbstractController
 
         $_SESSION['flash_success'] = 'Votre profil a été mis à jour.';
         Redirect::to('/account');
-    }
-
-    /**
-     * Retourne une chaîne lisible décrivant l'ancienneté du compte.
-     *
-     * @param DateTimeImmutable $createdAt La date de création du compte.
-     *
-     * @return string Une chaîne décrivant l'ancienneté du compte.
-     */
-    private function memberSince(DateTimeImmutable $createdAt): string
-    {
-        $diff = (new DateTimeImmutable())->diff($createdAt);
-
-        if ($diff->y >= 1) {
-            return $diff->y . ' an' . ($diff->y > 1 ? 's' : '');
-        }
-
-        if ($diff->m >= 1) {
-            return $diff->m . ' mois';
-        }
-
-        return 'moins d\'un mois';
     }
 }
