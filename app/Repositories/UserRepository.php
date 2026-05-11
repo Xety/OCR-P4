@@ -11,7 +11,7 @@ use DateTimeImmutable;
  * Repository pour la ressource User.
  *
  * Responsabilité unique : accès aux données utilisateur en base.
- * Retourne des UserEntity — objets de données purs, sans dépendance PDO.
+ * Retourne des UserEntity.
  */
 final class UserRepository extends AbstractRepository
 {
@@ -91,9 +91,39 @@ final class UserRepository extends AbstractRepository
     }
 
     /**
+     * Met à jour le profil d'un utilisateur.
+     *
+     * @param int $id Identifiant de l'utilisateur
+     * @param string $name Nouveau pseudo
+     * @param string $email Nouvel email
+     * @param string|null $password Nouveau mot de passe en clair, ou null pour ne pas le modifier
+     */
+    public function updateProfile(int $id, string $name, string $email, ?string $password = null): void
+    {
+        if ($password !== null) {
+            $this->execute(
+                sql: 'UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id',
+                bindings: [
+                    'name'     => $name,
+                    'email'    => $email,
+                    'password' => password_hash($password, PASSWORD_BCRYPT),
+                    'id'       => $id,
+                ],
+            );
+        } else {
+            $this->execute(
+                sql: 'UPDATE users SET name = :name, email = :email WHERE id = :id',
+                bindings: ['name' => $name, 'email' => $email, 'id' => $id],
+            );
+        }
+    }
+
+    /**
      * Hydrate une UserEntity depuis une ligne PDO.
      *
-     * @param array<string, mixed> $row
+     * @param array $row Une ligne de résultat PDO associatif contenant les champs d'un utilisateur.
+     *
+     * @return UserEntity L'entité utilisateur correspondante à la ligne de données.
      */
     private function hydrate(array $row): UserEntity
     {

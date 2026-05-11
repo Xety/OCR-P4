@@ -38,10 +38,15 @@ body {
    ============================================================ */
 .header {
     background: var(--header-background);
-    padding: 0.875rem 12rem;
+    padding: 0.875rem 2rem;
+}
+
+.header__container {
+    max-width: 1100px;
+    margin: 0 auto;
     display: flex;
-    align-items: center;
     gap: 2rem;
+    align-items: center;
 }
 
 /* Brand */
@@ -137,7 +142,7 @@ body {
    Main
    ============================================================ */
 .main {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 2.5rem auto;
     padding: 0 1.5rem;
     flex: 1;
@@ -152,6 +157,18 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+/* ============================================================
+   Page header
+   ============================================================ */
+.page-header__title {
+    font-family: "Playfair Display", serif;
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 2rem;
+}
+
+
 
 /* ============================================================
    Auth — split 50/50
@@ -247,7 +264,7 @@ body {
    ============================================================ */
 .btn {
     display: inline-block;
-    width: 100%;
+    width: auto;
     padding: 22px 38px;
     border: none;
     border-radius: 8px;
@@ -265,8 +282,21 @@ body {
     color: #fff;
 }
 
-.btn--primary:hover {
-    background-color: #007A47;
+.btn--primary:hover,
+.btn--outline:hover  {
+    background-color: #006D41;
+}
+
+.btn--outline {
+    width: auto;
+    padding: 22px 38px;
+    background-color: #F5F3EF;
+    border: 1px solid var(--cta-color);
+    color: var(--cta-color);
+}
+
+.btn--outline:hover  {
+    color: #fff;
 }
 
 /* ============================================================
@@ -277,6 +307,11 @@ body {
     border-radius: 8px;
     font-size: 0.875rem;
     margin-bottom: 1.25rem;
+}
+
+.alert--success {
+    background-color: #DCFCE7;
+    color: #166534;
 }
 
 .alert--error {
@@ -320,14 +355,253 @@ body {
     width: auto;
 }
 
+/* ============================================================
+   Carte générique
+   ============================================================ */
+.card {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 2rem;
+}
 
 /* ============================================================
-   Mobile
+   Page compte — layout haut
+   ============================================================ */
+.account-top {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Carte profil gauche */
+.account-profile {
+    flex: 0 0 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.5rem 2rem;
+}
+
+.account-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #E8E4DC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.6rem;
+}
+
+.account-avatar__img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+    opacity: 0.5;
+}
+
+.account-avatar__edit {
+    font-size: 13px;
+    color: var(--secondary-color);
+    text-decoration: underline;
+    margin-bottom: 1.5rem;
+}
+
+.account-profile__sep {
+    width: 50%;
+    border: none;
+    border-top: 1px solid #F5F3EF;
+    margin-bottom: 1.5rem;
+}
+
+.account-profile__name {
+    font-family: "Playfair Display", serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-bottom: 0.35rem;
+}
+
+.account-profile__since {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+}
+
+.account-profile__library {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.account-profile__library-label {
+    font-family: "Inter", sans-serif;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 8%;
+    text-transform: uppercase;
+    color: var(--primary-color);
+}
+
+.account-profile__library-count {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--primary-color);
+}
+
+/* Carte formulaire droite */
+.account-form {
+    padding: 2.5rem 5.5rem;
+}
+
+.account-form__title {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-bottom: 1.75rem;
+}
+
+.account-form .form-input {
+    background-color: #EDF2F6;
+}
+
+.account-form .form-input:focus {
+    border-color: var(--cta-color);
+}
+
+/* ============================================================
+   Table livres
+   ============================================================ */
+.account-books {
+    padding: 0;
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 20px;
+}
+
+.table-books {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-books__th {
+    padding: 2rem 1.25rem 0.5rem;
+    text-align: left;
+    font-family: "Inter", sans-serif;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 8%;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    border-bottom: 1px solid #F5F3EF;
+}
+
+.table-books__td {
+    padding: 1.1rem 1.25rem;
+    vertical-align: middle;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--primary-color);
+}
+
+.table-books__th:first-child,
+.table-books__td:first-child {
+    padding-left: 3.5rem;
+}
+
+.table-books__th:last-child,
+.table-books__td:last-child {
+    padding-right: 3.5rem;
+}
+
+.table-books__row:nth-child(even)  {
+    background-color: #EDF2F6;
+}
+
+.table-books__photo {
+    width: 55px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+}
+
+.table-books__photo--placeholder {
+    background-color: #D8D2C8;
+}
+
+.table-books__desc {
+    font-style: italic;
+    color: var(--primary-color);
+    max-width: 220px;
+}
+
+.table-books__actions {
+    white-space: nowrap;
+}
+
+.table-books__action {
+    font-size: 14px;
+    color: var(--primary-color);
+    text-decoration: underline;
+    margin-right: 1rem;
+}
+
+.table-books__action:last-child {
+    margin-right: 0;
+}
+
+.table-books__action--delete {
+    color: #E05252;
+}
+
+.table-books__empty {
+    padding: 2.5rem;
+    text-align: center;
+    color: var(--secondary-color);
+    font-size: 14px;
+}
+
+/* ============================================================
+   Badges disponibilité
+   ============================================================ */
+.badge {
+    display: inline-block;
+    padding: 0.23rem 0.83rem;
+    border-radius: 29.58px;
+    font-family: "Inter", sans-serif;
+    font-size: 8.88px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge--available {
+    background-color: #6DC5A1;
+    color: #ffffff;
+}
+
+.badge--unavailable {
+    background-color: #C56D6D;
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   Responsive
    ============================================================ */
 @media (max-width: 768px) {
-    .header {
+    .header__container {
         flex-wrap: wrap;
-        padding: 0.875rem 1.25rem;
         gap: 0;
     }
 
@@ -397,5 +671,100 @@ body {
     .auth-split__image {
         flex: none;
         height: 100%;
+    }
+
+    /* Account — mobile */
+    .account-top {
+        grid-template-columns: 1fr;
+    }
+
+    .account-form {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .account-profile {
+        flex: none;
+    }
+
+    .account-books {
+        background-color: transparent;
+    }
+    .table-books,
+    .table-books tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .table-books thead {
+        display: none;
+    }
+
+    .table-books__row {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 0.25rem 0.75rem;
+        padding: 2.25rem;
+        border-bottom: 1px solid #EBEBEB;
+    }
+
+    .table-books__row:nth-child(even),
+    .table-books__row:nth-child(odd)  {
+        background-color: #ffffff;
+        border-radius: 20px;
+    }
+
+    /* Reset padding des cellules */
+    .table-books__td,
+    .table-books__td:first-child,
+    .table-books__td:last-child {
+        padding: 0;
+    }
+
+    .table-books__td {
+        font-size: 14px;
+    }
+
+    /* Photo — col 1, s'étend sur 3 rangées (titre + auteur + badge) */
+    .table-books__td:nth-child(1) {
+        grid-row: 1 / 4;
+        grid-column: 1;
+    }
+
+    .table-books__photo {
+        width: 80px;
+        height: 100px;
+    }
+
+    .table-books__td.table-books__title {
+        grid-row: 1;
+        grid-column: 2;
+        align-self: end;
+    }
+
+    .table-books__td.table-books__author {
+        grid-row: 2;
+        grid-column: 2;
+        align-self: center;
+    }
+
+    .table-books__td.table-books__badge {
+        grid-row: 3;
+        grid-column: 2;
+        align-self: start;
+    }
+
+    .table-books__td.table-books__desc {
+        display: block;
+        grid-row: 4;
+        grid-column: 1 / 3;
+        max-width: none;
+        padding-top: 0.75rem;
+    }
+
+    .table-books__td.table-books__actions {
+        grid-row: 5;
+        grid-column: 1 / 3;
+        padding-top: 0.5rem;
     }
 }

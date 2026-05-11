@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use App\Controllers\AccountController;
 use App\Controllers\AuthController;
 use App\Controllers\PageController;
 use PDO;
@@ -72,5 +73,9 @@ final class Application
         $this->router->get('/register', $authController->showRegister(...));
         $this->router->post('/register', $authController->register(...));
         $this->router->get('/logout', $authController->logout(...));
+
+        $accountController = new AccountController($this->view, $this->db);
+        $this->router->get('/account', $accountController->show(...));
+        $this->router->post('/account', $accountController->update(...));
     }
 }

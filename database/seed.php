@@ -37,14 +37,49 @@ $users = [
 $stmt = $pdo->prepare('
     INSERT INTO users (name, email, password)
     VALUES (:name, :email, :password)
+    RETURNING id
 ');
 
-foreach ($users as [$name, $email, $password]) {
+$aliceId = null;
+
+foreach ($users as $i => [$name, $email, $password]) {
     $stmt->execute([
-        'name' => $name,
-        'email' => $email,
+        'name'     => $name,
+        'email'    => $email,
         'password' => password_hash($password, PASSWORD_BCRYPT),
+    ]);
+
+    $row = $stmt->fetch();
+
+    // On retient l'ID du premier utilisateur (Alice) pour les livres de démo
+    if ($i === 0) {
+        $aliceId = (int) $row['id'];
+    }
+}
+
+echo "\nUtilisateurs seedés";
+
+// ---- Livres de démo pour Alice ----
+$books = [
+    [$aliceId, 'Le Petit Prince', 'Antoine de Saint-Exupéry', 'Un aviateur tombe en panne dans le désert et rencontre un mystérieux petit garçon venu d\'une autre planète.', true],
+    [$aliceId, 'L\'Alchimiste', 'Paulo Coelho', 'Le voyage initiatique d\'un jeune berger andalou à la recherche d\'un trésor enfoui au pied des Pyramides.', false],
+    [$aliceId, 'The Kinkfolk Table', 'Nathan Williams', 'J\'ai récemment plongé dans les pages de \'The Kinkfolk Table\' et j\'ai été enchanté par chaque recette.', true],
+    [$aliceId, 'Harry Potter à l\'école', 'J.K. Rowling', 'Un jeune garçon découvre le jour de ses onze ans qu\'il est un sorcier et intègre l\'école de Poudlard.', false],
+];
+
+$stmtBook = $pdo->prepare('
+    INSERT INTO books (user_id, title, author, description, is_available)
+    VALUES (:user_id, :title, :author, :description, :is_available)
+');
+
+foreach ($books as [$userId, $title, $author, $description, $isAvailable]) {
+    $stmtBook->execute([
+        'user_id' => $userId,
+        'title' => $title,
+        'author' => $author,
+        'description' => $description,
+        'is_available' => $isAvailable ? 'true' : 'false',
     ]);
 }
 
-echo "\nSeeding terminé";
+echo "\nLivres seedés\n";

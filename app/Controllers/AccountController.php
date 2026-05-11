@@ -1,0 +1,149 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controllers;
+
+use App\Core\Auth;
+use App\Core\Redirect;
+use App\Core\Request;
+use App\Repositories\BookRepository;
+use App\Repositories\UserRepository;
+use App\Validation\Rules\Email;
+use App\Validation\Rules\MinLength;
+use App\Validation\Rules\Required;
+use App\Validation\Validator;
+use DateTimeImmutable;
+
+final class AccountController extends AbstractController
+{
+    /**
+     * Affiche la page Mon compte.
+     *
+     * @return string
+     */
+    public function show(Request $request): string
+    {
+        if (! Auth::isAuthenticated()) {
+            Redirect::to('/login');
+        }
+
+        $authData = Auth::user();
+        $userRepo = new UserRepository($this->db);
+        $user = $userRepo->find((int) $authData['id']);
+
+        $books = (new BookRepository($this->db))->findByUserId($authData['id']);
+
+        $memberSince = $this->memberSince($user->createdAt);
+
+        // Récupération du message flash éventuel
+        $success = null;
+        if (isset($_SESSION['flash_success'])) {
+            $success = $_SESSION['flash_success'];
+            unset($_SESSION['flash_success']);
+        }
+
+        return $this->view->render('pages/account', [
+            'title'=> 'Mon compte',
+            'mainClass'=> 'main--wide',
+            'user'=> $user,
+            'books'=> $books,
+            'memberSince'=> $memberSince,
+            'success'=> $success,
+        ]);
+    }
+
+    /**
+     * Met à jour le profil de l'utilisateur.
+     *
+     * @param Request $request La requête HTTP contenant les données du formulaire.
+     *
+     * @return string La réponse HTTP à afficher.
+     */
+    public function update(Request $request): string
+    {
+        if (! Auth::isAuthenticated()) {
+            Redirect::to('/login');
+        }
+
+        $authData = Auth::user();
+        $userId = (int) $authData['id'];
+
+        $name = trim($request->body['name'] ?? '');
+        $email = trim($request->body['email'] ?? '');
+        $password = $request->body['password'] ?? '';
+
+        $rules = [
+            'name'  => [new Required()],
+            'email' => [new Required(), new Email()],
+        ];
+
+        // Le mot de passe est facultatif : on ne le valide que s'il est renseigné
+        if ($password !== '') {
+            $rules['password'] = [new MinLength(8)];
+        }
+
+        $validator = new Validator($request->body, $rules);
+
+        $userRepo = new UserRepository($this->db);
+        $user = $userRepo->find($userId);
+        $books = (new BookRepository($this->db))->findByUserId($userId);
+
+        $memberSince = $this->memberSince($user->createdAt);
+
+        $renderError = function (string $error) use ($user, $books, $memberSince, $name, $email): string {
+            return $this->view->render('pages/account', [
+                'title'=> 'Mon compte',
+                'mainClass'=> 'main--wide',
+                'user'=> $user,
+                'books'=> $books,
+                'memberSince'=> $memberSince,
+                'error'=> $error,
+                'old'=> ['name'=> $name, 'email'=> $email],
+            ]);
+        };
+
+        if ($validator->fails()) {
+            return $renderError($validator->firstError());
+        }
+
+        // Vérification d'unicité de l'email si modifié
+        if ($email !== $user->email) {
+            $existing = $userRepo->findByEmail($email);
+            if ($existing !== null && $existing->id !== $userId) {
+                return $renderError('Cette adresse email est déjà utilisée.');
+            }
+        }
+
+        $userRepo->updateProfile($userId, $name, $email, $password !== '' ? $password : null);
+
+        // Mise à jour de la session avec les nouvelles données
+        $updatedUser = $userRepo->find($userId);
+        Auth::login($updatedUser);
+
+        $_SESSION['flash_success'] = 'Votre profil a été mis à jour.';
+        Redirect::to('/account');
+    }
+
+    /**
+     * Retourne une chaîne lisible décrivant l'ancienneté du compte.
+     *
+     * @param DateTimeImmutable $createdAt La date de création du compte.
+     *
+     * @return string Une chaîne décrivant l'ancienneté du compte.
+     */
+    private function memberSince(DateTimeImmutable $createdAt): string
+    {
+        $diff = (new DateTimeImmutable())->diff($createdAt);
+
+        if ($diff->y >= 1) {
+            return $diff->y . ' an' . ($diff->y > 1 ? 's' : '');
+        }
+
+        if ($diff->m >= 1) {
+            return $diff->m . ' mois';
+        }
+
+        return 'moins d\'un mois';
+    }
+}
