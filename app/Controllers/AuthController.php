@@ -14,7 +14,7 @@ use App\Validation\Rules\MinLength;
 use App\Validation\Rules\Confirmed;
 use App\Validation\Rules\Required;
 use App\Validation\Validator;
-use DateTime;
+use DateTimeImmutable;
 
 /**
  * Gère l'authentification : formulaire de connexion, traitement POST et déconnexion.
@@ -161,7 +161,7 @@ final class AuthController extends AbstractController
         $user = new UserEntity([
             'name' => $name,
             'email' => $email,
-            'createdAt' => new DateTime(),
+            'createdAt' => new DateTimeImmutable(),
             'password' => password_hash($password, PASSWORD_BCRYPT),
         ]);
 
