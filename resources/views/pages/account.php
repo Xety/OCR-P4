@@ -5,6 +5,9 @@
 /** @var string|null $success */
 /** @var string|null $error */
 /** @var array<string, string> $old */
+/** @var int $page */
+/** @var int $totalPages */
+/** @var int $totalBooks */
 ?>
 
 <div class="page-header">
@@ -146,3 +149,21 @@
         </tbody>
     </table>
 </div>
+<?php if ($totalPages > 1): ?>
+    <nav class="pagination">
+        <?php if ($page > 1): ?>
+            <a href="/account?page=<?= $page - 1 ?>" class="pagination__link">&laquo; Précédent</a>
+        <?php endif; ?>
+
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <a
+                href="/account?page=<?= $i ?>"
+                class="pagination__link<?= $i === $page ? ' pagination__link--active' : '' ?>"
+            ><?= $i ?></a>
+        <?php endfor; ?>
+
+        <?php if ($page < $totalPages): ?>
+            <a href="/account?page=<?= $page + 1 ?>" class="pagination__link">Suivant &raquo;</a>
+        <?php endif; ?>
+    </nav>
+<?php endif; ?>

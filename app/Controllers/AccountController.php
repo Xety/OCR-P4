@@ -32,7 +32,19 @@ final class AccountController extends AbstractController
         $userRepo = new UserRepository($this->db);
         $user = $userRepo->find((int) $authData['id']);
 
-        $books = (new BookRepository($this->db))->findByUserId($authData['id']);
+        $perPage = (int) config('pagination.account_books', 2);
+        $page = max(1, (int) ($request->query['page'] ?? 1));
+        $offset = ($page - 1) * $perPage;
+
+        $bookRepo  = new BookRepository($this->db);
+        $books = $bookRepo->findByUserIdPaginated($authData['id'], $perPage, $offset);
+        $totalBooks = $bookRepo->countByUserId($authData['id']);
+        $totalPages = (int) ceil($totalBooks / $perPage);
+
+        // Si la page demandée n'est pas valide, on redirige vers la page 1.
+        if ($page < 1 || ($page > $totalPages && $totalPages > 0)) {
+            Redirect::to('/account?page=1');
+        }
 
         $memberSince = DateHelper::elapsed($user->getCreatedAt());
 
@@ -44,11 +56,14 @@ final class AccountController extends AbstractController
         }
 
         return $this->view->render('pages/account', [
-            'title'=> 'Mon compte',
-            'user'=> $user,
-            'books'=> $books,
-            'memberSince'=> $memberSince,
-            'success'=> $success,
+            'title' => 'Mon compte',
+            'user' => $user,
+            'books' => $books,
+            'memberSince' => $memberSince,
+            'success' => $success,
+            'page' => $page,
+            'totalPages' => $totalPages,
+            'totalBooks' => $totalBooks,
         ]);
     }
 

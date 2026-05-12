@@ -261,6 +261,31 @@ abstract class AbstractRepository
     }
 
     /**
+     * Compte le nombre d'entités correspondant à des critères d'égalité.
+     *
+     * @param array $criteria ['property' => $value]
+     *
+     * @return int Le nombre d'entités correspondantes.
+     */
+    public function countBy(array $criteria = []): int
+    {
+        $entityClass = $this->getEntityClass();
+        $meta = $entityClass::metadata();
+        $sql = 'SELECT COUNT(*) FROM ' . $meta['table'];
+
+        [$where, $bindings] = $this->buildWhere($criteria, $meta['columns']);
+
+        if ($where !== '') {
+            $sql .= ' WHERE ' . $where;
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($bindings);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
      * Vérifie que l'entité passée correspond bien au type géré par ce repository.
      *
      * @param AbstractEntity $entity L'entité à vérifier.

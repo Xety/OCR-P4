@@ -26,4 +26,30 @@ final class BookRepository extends AbstractRepository
     {
         return $this->findBy(['userId' => $userId], ['createdAt' => 'DESC']);
     }
+
+    /**
+     * Retourne une page de livres d'un utilisateur.
+     *
+     * @param int $userId L'identifiant de l'utilisateur.
+     * @param int $limit Le nombre maximum de livres à retourner.
+     * @param int $offset Le nombre de livres à ignorer (pour la pagination).
+     *
+     * @return array<BookEntity>
+     */
+    public function findByUserIdPaginated(int $userId, int $limit, int $offset): array
+    {
+        return $this->findBy(['userId' => $userId], ['createdAt' => 'DESC'], $limit, $offset);
+    }
+
+    /**
+     * Retourne le nombre total de livres d'un utilisateur.
+     *
+     * @param int $userId L'identifiant de l'utilisateur.
+     *
+     * @return int Le nombre total de livres de l'utilisateur.
+     */
+    public function countByUserId(int $userId): int
+    {
+        return $this->countBy(['userId' => $userId]);
+    }
 }

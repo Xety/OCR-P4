@@ -486,6 +486,7 @@ body {
     overflow: hidden;
     background-color: #fff;
     border-radius: 20px;
+    margin-bottom: 2rem;
 }
 
 .table-books {
@@ -593,6 +594,34 @@ body {
 .badge--unavailable {
     background-color: #C56D6D;
     color: #ffffff;
+}
+
+/* ============================================================
+   Pagination
+   ============================================================ */
+.pagination {
+    text-align: center;
+}
+
+.pagination__link {
+    display: inline-block;
+    width: auto;
+    padding: 11px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+    background-color: var(--cta-color);
+    color: #fff;
+}
+.pagination__link--active,
+.pagination__link:hover {
+    background-color: #006D41;
 }
 
 
