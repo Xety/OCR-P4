@@ -6,6 +6,7 @@ namespace App\Core;
 
 use App\Controllers\AccountController;
 use App\Controllers\AuthController;
+use App\Controllers\ErrorController;
 use App\Controllers\PageController;
 use PDO;
 
@@ -77,5 +78,8 @@ final class Application
         $accountController = new AccountController($this->view, $this->db);
         $this->router->get('/account', $accountController->show(...));
         $this->router->post('/account', $accountController->update(...));
+
+        $errorController = new ErrorController($this->view, $this->db);
+        $this->router->fallback($errorController->notFound(...));
     }
 }

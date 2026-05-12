@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use RuntimeException;
-
 /**
  * Enregistre les routes et dispatche la requête vers le bon handler.
  */
@@ -14,9 +12,24 @@ final class Router
     /**
      * Table de routage : méthode HTTP => URI => handler
      *
-     * @var array
+     * @var array<string, array<string, callable>>
      */
     private array $routes = [];
+
+    /**
+     * Handler appelé quand aucune route ne correspond.
+     *
+     * @var callable|null
+     */
+    private mixed $fallback = null;
+
+    /**
+     * Enregistre un handler de fallback (404).
+     */
+    public function fallback(callable $handler): void
+    {
+        $this->fallback = $handler;
+    }
 
     /**
      * Enregistre une route pour la méthode HTTP donnée.
@@ -93,29 +106,13 @@ final class Router
 
     /**
      * Dispatche la requête vers le handler correspondant.
-     *
-     * @throws RuntimeException si aucune route ne correspond
      */
     public function dispatch(Request $request): void
     {
-        $handler = $this->routes[$request->method->value][$request->uri] ?? null;
+        $handler = $this->routes[$request->method->value][$request->uri] ?? $this->fallback;
 
-        // Si aucune route ne correspond, envoyer une 404.
-        if ($handler === null) {
-            $this->sendNotFound($request->uri);
-            return;
+        if ($handler !== null) {
+            echo ($handler)($request);
         }
-
-        // Exécuter le handler et envoyer la réponse.
-        echo ($handler)($request);
-    }
-
-    /**
-     * Envoie une réponse 404 simple.
-     */
-    private function sendNotFound(string $uri): void
-    {
-        http_response_code(404);
-        echo sprintf('<h1>404 — Page introuvable</h1><p>La route <code>%s</code> n\'existe pas.</p>', htmlspecialchars($uri));
     }
 }
