@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Core\Auth;
 use App\Core\Helpers\DateHelper;
+use App\Core\Paginator;
 use App\Core\Redirect;
 use App\Core\Request;
 use App\Repositories\BookRepository;
@@ -29,23 +30,24 @@ final class AccountController extends AbstractController
         }
 
         $authData = Auth::user();
-        $userRepo = new UserRepository($this->db);
-        $user = $userRepo->find((int) $authData['id']);
+        $bookRepo = new BookRepository($this->db);
 
-        $perPage = (int) config('pagination.account_books', 2);
-        $page = max(1, (int) ($request->query['page'] ?? 1));
-        $offset = ($page - 1) * $perPage;
+        // Pagination des livres de l'utilisateur
+        $paginator = new Paginator(
+            page: max(1, (int) ($request->query['page'] ?? 1)),
+            perPage: (int) config('pagination.account_books', 5),
+            total: $bookRepo->countByUserId($authData['id'])
+        );
 
-        $bookRepo  = new BookRepository($this->db);
-        $books = $bookRepo->findByUserIdPaginated($authData['id'], $perPage, $offset);
-        $totalBooks = $bookRepo->countByUserId($authData['id']);
-        $totalPages = (int) ceil($totalBooks / $perPage);
-
-        // Si la page demandée n'est pas valide, on redirige vers la page 1.
-        if ($page < 1 || ($page > $totalPages && $totalPages > 0)) {
+        // Si la page demandée est hors limites, rediriger vers la première page
+        if ($paginator->isOutOfBounds()) {
             Redirect::to('/account?page=1');
         }
 
+        $books = $bookRepo->findByUserIdPaginated($authData['id'], $paginator->getPerPage(), $paginator->getOffset());
+
+        $userRepo = new UserRepository($this->db);
+        $user = $userRepo->find((int) $authData['id']);
         $memberSince = DateHelper::elapsed($user->getCreatedAt());
 
         // Récupération du message flash éventuel
@@ -61,9 +63,8 @@ final class AccountController extends AbstractController
             'books' => $books,
             'memberSince' => $memberSince,
             'success' => $success,
-            'page' => $page,
-            'totalPages' => $totalPages,
-            'totalBooks' => $totalBooks,
+            'paginator' => $paginator,
+            'baseUrl' => $request->uri,
         ]);
     }
 

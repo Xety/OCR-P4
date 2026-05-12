@@ -64,8 +64,8 @@ final class Application
     private function registerRoutes(): void
     {
         $pageController = new PageController($this->view, $this->db);
+        // syntaxe first-class callable == [$pageController, 'index']
         $this->router->get('/', $pageController->index(...));
-
 
         $authController = new AuthController($this->view, $this->db);
         $this->router->get('/login', $authController->showLogin(...));
