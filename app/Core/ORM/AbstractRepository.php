@@ -142,14 +142,16 @@ abstract class AbstractRepository
      * Supprime une entité de la BDD.
      *
      * @param AbstractEntity $entity L'entité à supprimer (doit avoir un id non nul)
+     *
+     * @param bool true si la suppression a réussi, false sinon
      */
-    public function delete(AbstractEntity $entity): void
+    public function delete(AbstractEntity $entity): bool
     {
         $this->assertEntityType($entity);
 
         $meta = $this->getEntityClass()::metadata();
         $stmt = $this->pdo->prepare(sprintf('DELETE FROM %s WHERE id = :id', $meta['table']));
-        $stmt->execute(['id' => $entity->getId()]);
+        return $stmt->execute(['id' => $entity->getId()]);
     }
 
     /**

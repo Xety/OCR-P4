@@ -39,6 +39,13 @@ final class Request
      */
     public readonly array $body;
 
+    /**
+     * Les paramètres extraits des segments dynamiques de l'URI (ex: {id}).
+     *
+     * @var array<string, string>
+     */
+    public array $params = [];
+
     public function __construct()
     {
         $rawUri = $_SERVER['REQUEST_URI'] ?? '/';

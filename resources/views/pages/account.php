@@ -1,7 +1,7 @@
 <?php
 /** @var \App\Core\Paginator $paginator */
 /** @var \App\Entities\UserEntity $user */
-/** @var array<int, \App\Entities\BookEntity> $books */
+/** @var array<\App\Entities\BookEntity> $books */
 /** @var string $memberSince */
 /** @var string|null $success */
 /** @var string|null $error */
@@ -120,12 +120,16 @@
                         <td class="table-books__td">
                             <?php if ($book->getPhoto() !== null): ?>
                                 <img
-                                    src="<?= e($book->getPhoto()) ?>"
+                                    src="images/books/<?= e($book->getPhoto()) ?>"
                                     alt="<?= e($book->getTitle()) ?>"
                                     class="table-books__photo"
                                 />
                             <?php else: ?>
-                                <div class="table-books__photo table-books__photo--placeholder"></div>
+                                <img
+                                    src="https://placehold.co/2731x4096/png"
+                                    alt="Couverture de <?= e($book->getTitle()) ?>"
+                                    class="table-books__photo"
+                                />
                             <?php endif; ?>
                         </td>
                         <td class="table-books__td table-books__title"><?= e($book->getTitle()) ?></td>

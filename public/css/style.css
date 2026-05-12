@@ -161,6 +161,22 @@ body {
 /* ============================================================
    Page header
    ============================================================ */
+.page-header {
+    margin-bottom: 1rem;
+}
+
+.page-header__back {
+    display: inline-block;
+    font-size: 14px;
+    color: var(--secondary-color);
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+}
+
+.page-header__back:hover {
+    color: var(--primary-color);
+}
+
 .page-header__title {
     font-family: "Playfair Display", serif;
     font-size: 26px;
@@ -597,6 +613,279 @@ body {
 }
 
 /* ============================================================
+   Page Books
+   ============================================================ */
+.books-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.books-header__title {
+    font-family: "Playfair Display", serif;
+    font-size: 36px;
+    font-weight: 400;
+    white-space: nowrap;
+    color: var(--link-color);
+}
+
+.books-search {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+}
+
+.books-search__icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+}
+
+.books-search__input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border: 1px solid #F0F0F0;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    color: var(--secondary-color);
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.books-search__input::placeholder {
+    color: var(--secondary-color);
+}
+
+.books-search__input:focus {
+    border-color: var(--cta-color);
+}
+
+/* ============================================================
+   Page Books — grille
+   ============================================================ */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3.5rem;
+    margin-bottom: 2rem;
+}
+
+.books-empty {
+    color: var(--secondary-color);
+    font-size: 0.95rem;
+    padding: 3rem 0;
+    text-align: center;
+}
+
+/* ============================================================
+   Carte livre
+   ============================================================ */
+.book-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    overflow: hidden;    text-decoration: none;
+    box-shadow: 0px 4px 24px 0px #00000003;
+}
+
+.book-card__cover {
+    position: relative;
+    object-fit: cover;
+    overflow: hidden;
+    background-color: #EDE9E0;
+}
+
+.book-card__img {
+    width: 100%;
+    height: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.book-card__badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+}
+
+.book-card__body {
+    padding: 0.875rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+}
+
+.book-card__title {
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--link-color);
+    margin-bottom: 0.35rem;
+}
+
+.book-card__author {
+    font-size: 14px;
+    color: var(--secondary-color);
+    margin-bottom: 1.2rem;
+}
+
+.book-card__seller {
+    font-size: 10px;
+    color: var(--secondary-color);
+    font-style: italic;
+    margin-bottom: 1.2rem;
+}
+
+.book-card__seller span {
+    font-style: normal;
+}
+
+/* ============================================================
+   Page Book — split plein écran
+   ============================================================ */
+.book-split {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.book-split__image {
+    flex: 0 0 50%;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 80px - 60px);
+    align-self: flex-start;
+}
+
+.book-split__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.book-split__content {
+    flex: 1;
+    padding: 3rem 7rem 3rem 5rem;
+    display: flex;
+    flex-direction: column;
+    background-color: #FAF9F7;
+}
+
+.book-split__title {
+    font-family: "Playfair Display", serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--link-color);
+    margin-bottom: 2rem;
+}
+
+.book-split__author {
+    font-size: 16px;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.book-split__sep {
+    border: none;
+    border-top: 1px solid var(--secondary-color);
+    margin: 1.75rem 0;
+    width: 2rem;
+    margin-left: 0;
+}
+
+.book-split__label {
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 8%;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    margin: 0 0 0.75rem;
+
+}
+
+.book-split__description {
+    font-size: 14px;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+}
+
+.book-split__owner {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    border-radius: 60px;
+    padding: 6px 17px 6px 6px;
+    width: fit-content;
+    margin-bottom: 2rem;
+    background-color: #ffffff;
+}
+
+.book-split__owner-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.book-split__owner-name {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--primary-color);
+}
+
+.book-split__cta {
+    width: 100%;
+    padding: 1.1rem;
+    font-size: 1rem;
+    margin-top: auto;
+}
+
+/* ============================================================
+   Book Breadcrumbs
+   ============================================================ */
+.book-breadcrumb {
+    padding: 1.5rem 0;
+    background-color: var(--header-background);
+}
+.book-breadcrumb__nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 10px;
+    color: var(--secondary-color);
+    width: 1100px;
+    margin: 0 auto;
+}
+
+.book-breadcrumb__link {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.book-breadcrumb__link:hover {
+    color: var(--primary-color);
+}
+
+.book-breadcrumb__sep {
+    color: #ccc;
+}
+
+.book-breadcrumb__current {
+    color: var(--secondary-color);
+}
+
+/* ============================================================
    Page d'erreur
    ============================================================ */
 .error-page {
@@ -835,5 +1124,38 @@ body {
         grid-row: 5;
         grid-column: 1 / 3;
         padding-top: 0.5rem;
+    }
+
+    /* Books */
+    .books-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .books-search {
+        max-width: none;
+    }
+
+    .books-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .book-split {
+        flex-direction: column;
+    }
+
+    /* Book*/
+    .book-split__image {
+        position: relative;
+        height: 280px;
+    }
+
+    .book-split__content {
+        padding: 2rem 1.5rem;
+    }
+
+    .book-breadcrumb {
+        display: none;
     }
 }

@@ -6,6 +6,7 @@ namespace App\Core;
 
 use App\Controllers\AccountController;
 use App\Controllers\AuthController;
+use App\Controllers\BookController;
 use App\Controllers\ErrorController;
 use App\Controllers\PageController;
 use PDO;
@@ -65,8 +66,11 @@ final class Application
     private function registerRoutes(): void
     {
         $pageController = new PageController($this->view, $this->db);
-        // syntaxe first-class callable == [$pageController, 'index']
         $this->router->get('/', $pageController->index(...));
+
+        $bookController = new BookController($this->view, $this->db);
+        $this->router->get('/books', $bookController->index(...));
+        $this->router->get('/books/{id}', $bookController->show(...));
 
         $authController = new AuthController($this->view, $this->db);
         $this->router->get('/login', $authController->showLogin(...));

@@ -9,7 +9,7 @@ use App\Core\Auth;
 
         <nav class="header__nav" id="header-nav">
             <a href="/" class="header__nav-link">Accueil</a>
-            <a href="/users" class="header__nav-link">Nos livres à l'échange</a>
+            <a href="/books" class="header__nav-link">Nos livres à l'échange</a>
         </nav>
 
         <div class="header__actions" id="header-actions">
