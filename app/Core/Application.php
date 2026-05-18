@@ -9,6 +9,7 @@ use App\Controllers\AuthController;
 use App\Controllers\BookController;
 use App\Controllers\ErrorController;
 use App\Controllers\PageController;
+use App\Controllers\UserController;
 use PDO;
 
 /**
@@ -82,6 +83,9 @@ final class Application
         $accountController = new AccountController($this->view, $this->db);
         $this->router->get('/account', $accountController->show(...));
         $this->router->post('/account', $accountController->update(...));
+
+        $userController = new UserController($this->view, $this->db);
+        $this->router->get('/users/{id}', $userController->show(...));
 
         $errorController = new ErrorController($this->view, $this->db);
         $this->router->fallback($errorController->notFound(...));

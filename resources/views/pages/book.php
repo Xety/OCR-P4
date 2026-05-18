@@ -43,7 +43,8 @@
         <p class="book-split__label">Propriétaire</p>
         <div class="book-split__owner">
             <img src="/images/icon-user.svg" alt="" class="book-split__owner-avatar" />
-            <span class="book-split__owner-name"><?= e($book->getUserName() ?? '') ?></span>
+            <a class="book-split__owner-name" href="/users/<?= e($book->getUserId()) ?>"><?= e($book->getUserName() ?? '') ?></a>
+
         </div>
 
         <a href="#" class="btn btn--primary book-split__cta">Envoyer un message</a>

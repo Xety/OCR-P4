@@ -495,6 +495,20 @@ body {
 }
 
 /* ============================================================
+   User profile
+   ============================================================ */
+.user-top {
+    grid-template-columns: 280px 1fr;
+    align-items: start;
+}
+
+.user-profile__cta {
+    margin-top: 1.5rem;
+    padding: 0.875rem;
+    font-size: 14px;
+}
+
+/* ============================================================
    Table livres
    ============================================================ */
 .account-books {
@@ -842,6 +856,7 @@ body {
     font-size: 14px;
     font-weight: 400;
     color: var(--primary-color);
+    text-decoration: none;
 }
 
 .book-split__cta {
