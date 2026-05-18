@@ -1,12 +1,10 @@
 <?php
-/** @var \App\Core\Paginator $paginator */
 /** @var \App\Entities\UserEntity $user */
 /** @var array<\App\Entities\BookEntity> $books */
 /** @var string $memberSince */
 /** @var string|null $success */
 /** @var string|null $error */
 /** @var array<string, string> $old */
-/** @var string $baseUrl */
 ?>
 
 <div class="page-header">
@@ -152,4 +150,3 @@
         </tbody>
     </table>
 </div>
-<?php include __DIR__ . '/../partials/pagination.php'; ?>

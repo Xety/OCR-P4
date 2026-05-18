@@ -6,7 +6,6 @@ namespace App\Controllers;
 
 use App\Core\Auth;
 use App\Core\Helpers\DateHelper;
-use App\Core\Paginator;
 use App\Core\Redirect;
 use App\Core\Request;
 use App\Repositories\BookRepository;
@@ -32,19 +31,7 @@ final class AccountController extends AbstractController
         $authData = Auth::user();
         $bookRepo = new BookRepository($this->db);
 
-        // Pagination des livres de l'utilisateur
-        $paginator = new Paginator(
-            page: max(1, (int) ($request->query['page'] ?? 1)),
-            perPage: (int) config('pagination.account_books', 5),
-            total: $bookRepo->countByUserId($authData['id'])
-        );
-
-        // Si la page demandée est hors limites, rediriger vers la première page
-        if ($paginator->isOutOfBounds()) {
-            Redirect::to('/account?page=1');
-        }
-
-        $books = $bookRepo->findByUserIdPaginated($authData['id'], $paginator->getPerPage(), $paginator->getOffset());
+        $books = $bookRepo->findByUserId($authData['id']);
 
         $userRepo = new UserRepository($this->db);
         $user = $userRepo->find((int) $authData['id']);
@@ -63,8 +50,6 @@ final class AccountController extends AbstractController
             'books' => $books,
             'memberSince' => $memberSince,
             'success' => $success,
-            'paginator' => $paginator,
-            'baseUrl' => $request->uri,
         ]);
     }
 

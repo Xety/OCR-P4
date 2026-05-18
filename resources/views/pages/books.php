@@ -1,8 +1,6 @@
 <?php
 /** @var array<\App\Entities\BookEntity> $books */
 /** @var string $search */
-/** @var \App\Core\Paginator $paginator */
-/** @var string $baseUrl */
 ?>
 
 <div class="books-header">
@@ -56,5 +54,4 @@
         <?php endforeach; ?>
     </div>
 
-    <?php include __DIR__ . '/../partials/pagination.php'; ?>
 <?php endif; ?>
