@@ -184,6 +184,214 @@ body {
     margin-bottom: 2rem;
 }
 
+/* ============================================================
+   Hero — page d'accueil
+   ============================================================ */
+.hero--wrap {
+    background-color: var(--header-background);
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    min-height: calc(100vh - 80px - 60px);
+    padding: 3rem 0;
+    max-width: 1100px;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem;
+}
+
+.hero__content {
+    flex: 0 0 380px;
+}
+
+.hero__title {
+    font-family: "Playfair Display", serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-bottom: 1.25rem;
+}
+
+.hero__text {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--link-color);
+    margin-bottom: 2rem;
+}
+
+.hero__cta {
+    padding: 1rem 2rem;
+    font-size: 15px;
+}
+
+.hero__img {
+    width: 100%;
+    max-width: 500px;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    border-radius: 2px;
+}
+
+.hero__caption {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--secondary-color);
+    margin-top: 0.4rem;
+}
+
+/* ============================================================
+   Home — derniers livres ajoutés
+   ============================================================ */
+.home-latest {
+    padding: 5rem 0 6rem;
+}
+
+.home-latest__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.home-latest__title {
+    font-family: "Playfair Display", serif;
+    font-size: 36px;
+    font-weight: 400;
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 3rem;
+}
+
+.home-latest__footer {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+/* ============================================================
+   Home — comment ça marche
+   ============================================================ */
+.home-how {
+    padding: 5rem 0 6rem;
+    background-color: var(--header-background);
+}
+
+.home-how__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    text-align: center;
+}
+
+.home-how__title {
+    font-family: "Playfair Display", serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.home-how__subtitle {
+    font-size: 16px;
+    color: var(--primary-color);
+    max-width: 400px;
+    margin: 0 auto 3rem;
+}
+
+.home-how__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+}
+
+.home-how__card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--primary-color);
+    text-align: center;
+    min-height: 140px;
+}
+
+.home-how__footer {
+    text-align: center;
+}
+
+/* ============================================================
+   Home — nos valeurs
+   ============================================================ */
+.home-values {
+    background-color: var(--background-color);
+}
+
+.home-values__banner-img {
+    width: 100%;
+}
+
+.home-values__body {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 5rem;
+    display: flex;
+    position: relative;
+    align-items: flex-end;
+    gap: 2rem;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.home-values__text {
+    flex: 0 0 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.home-values__title {
+    font-family: "Playfair Display", serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--primary-color);
+}
+
+.home-values__para {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--primary-color);
+    padding-right: 40px;
+}
+
+.home-values__signature {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--secondary-color);
+}
+
+.home-values__footer {
+    display: flex;
+    margin-top: 20px;
+}
+
+.home-values__deco {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-bottom: 0.5rem;
+}
+
+.home-values__heart {
+    width: 120px;
+    height: auto;
+}
 
 
 /* ============================================================
@@ -284,7 +492,7 @@ body {
     padding: 22px 38px;
     border: none;
     border-radius: 8px;
-    font-size: 0.95rem;
+    font-size: 16px;
     font-family: inherit;
     font-weight: 600;
     cursor: pointer;
@@ -940,34 +1148,6 @@ body {
     font-size: 0.9em;
 }
 
-/* ============================================================
-   Pagination
-   ============================================================ */
-.pagination {
-    text-align: center;
-}
-
-.pagination__link {
-    display: inline-block;
-    width: auto;
-    padding: 11px 14px;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.15s ease;
-    background-color: var(--cta-color);
-    color: #fff;
-}
-.pagination__link--active,
-.pagination__link:hover {
-    background-color: #006D41;
-}
-
 
 /* ============================================================
    Responsive
@@ -1029,6 +1209,107 @@ body {
         flex-direction: column;
         align-items: center;
         gap: 1.25rem;
+    }
+
+    /* Home — mobile */
+    .hero {
+        flex-direction: column-reverse;
+        gap: 1.75rem;
+        padding: 0;
+        margin-top: 0;
+    }
+
+    .hero__content {
+        flex: none;
+        padding: 0 1.5rem;
+        width: 100%;
+    }
+
+    .hero__title {
+        font-size: 32px;
+    }
+
+    .hero__image-wrap {
+        width: 100%;
+    }
+
+    .hero__img {
+        max-width: 100%;
+        object-position: center center;
+    }
+
+    .hero__caption {
+        margin-right: 20px;
+    }
+
+    .hero__cta {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+
+    /* Home latest — mobile */
+    .home-latest {
+        padding: 3rem 0 4rem;
+    }
+
+    .home-latest__title {
+        font-size: 28px;
+        margin-bottom: 2rem;
+    }
+
+    .home-latest__footer {
+        display: none;
+    }
+
+    /* Home how — mobile */
+    .home-how {
+        padding: 3rem 0 4rem;
+    }
+
+    .home-how__title {
+        font-size: 28px;
+    }
+
+    .home-how__grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .home-how__card {
+        min-height: 120px;
+    }
+
+    .home-how__footer .btn--outline {
+        width: 100%;
+        display: block;
+    }
+
+    /* Home values — mobile */
+    .home-values__banner {
+        height: 100%;
+    }
+
+    .home-values__body {
+        flex-direction: column;
+        padding: 2.5rem 1.5rem 3.5rem;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .home-values__text {
+        flex: none;
+        width: 100%;
+    }
+
+    .home-values__footer {
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .home-values__deco {
+        justify-content: center;
+        padding-bottom: 0;
     }
 
     /* Auth — mobile */

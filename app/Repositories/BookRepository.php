@@ -85,4 +85,31 @@ final class BookRepository extends AbstractRepository
 
         return BookEntity::fromRow($row, withHidden: true);
     }
+
+    /**
+     * Retourne les derniers livres ajoutés, avec le nom du vendeur.
+     *
+     * @param int $limit Le nombre maximum de livres à retourner.
+     *
+     * @return array<BookEntity>
+     */
+    public function findLatest(int $limit = 4): array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT b.*, u.name AS user_name
+            FROM books b
+            INNER JOIN users u ON b.user_id = u.id
+            ORDER BY b.created_at DESC
+            LIMIT :limit'
+        );
+        $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return array_map(
+            function (array $row): BookEntity {
+                return BookEntity::fromRow($row, withHidden: true);
+            },
+            $stmt->fetchAll(PDO::FETCH_ASSOC),
+        );
+    }
 }
