@@ -8,7 +8,7 @@
 ?>
 
 <div class="page-header">
-    <h2 class="page-header__title">Mon compte</h2>
+    <h1 class="page-header__title">Mon compte</h1>
 </div>
 
 <div class="account-top">
@@ -40,7 +40,7 @@
 
     <!-- Carte formulaire -->
     <div class="card account-form">
-        <h3 class="account-form__title">Vos informations personnelles</h3>
+        <h2 class="account-form__title">Vos informations personnelles</h2>
 
         <?php if (! empty($success)): ?>
             <div class="alert alert--success"><?= e($success) ?></div>
