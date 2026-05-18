@@ -22,6 +22,6 @@
 
         <?php require __DIR__ . '/partials/footer.php'; ?>
 
-        <script src="/js/header.js" defer></script>
+        <script src="/js/app.js" defer></script>
     </body>
 </html>

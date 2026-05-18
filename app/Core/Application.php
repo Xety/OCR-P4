@@ -71,6 +71,8 @@ final class Application
 
         $bookController = new BookController($this->view, $this->db);
         $this->router->get('/books', $bookController->index(...));
+        $this->router->get('/books/{id}/edit', $bookController->edit(...));
+        $this->router->post('/books/{id}/edit', $bookController->update(...));
         $this->router->get('/books/{id}', $bookController->show(...));
 
         $authController = new AuthController($this->view, $this->db);

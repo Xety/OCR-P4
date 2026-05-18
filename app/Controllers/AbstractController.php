@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Contracts\RendererInterface;
+use App\Core\Auth;
+use App\Core\Redirect;
 use PDO;
 
 /**
@@ -19,4 +21,14 @@ abstract class AbstractController
         protected readonly RendererInterface $view,
         protected readonly PDO $db,
     ) {}
+
+    /**
+     * Redirige vers /login si l'utilisateur n'est pas authentifié.
+     */
+    protected function requireAuth(): void
+    {
+        if (! Auth::isAuthenticated()) {
+            Redirect::to('/login');
+        }
+    }
 }

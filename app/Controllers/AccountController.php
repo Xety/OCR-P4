@@ -24,9 +24,7 @@ final class AccountController extends AbstractController
      */
     public function show(Request $request): string
     {
-        if (! Auth::isAuthenticated()) {
-            Redirect::to('/login');
-        }
+        $this->requireAuth();
 
         $authData = Auth::user();
         $bookRepo = new BookRepository($this->db);
@@ -62,9 +60,7 @@ final class AccountController extends AbstractController
      */
     public function update(Request $request): string
     {
-        if (! Auth::isAuthenticated()) {
-            Redirect::to('/login');
-        }
+        $this->requireAuth();
 
         $authData = Auth::user();
         $userId = (int) $authData['id'];

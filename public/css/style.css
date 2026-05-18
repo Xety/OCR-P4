@@ -1109,6 +1109,91 @@ body {
 }
 
 /* ============================================================
+   Page édition livre
+   ============================================================ */
+.book-edit {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 4rem;
+    align-items: start;
+    padding: 2.5rem 3rem;
+}
+
+.book-edit__photo-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.book-edit__col-label {
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--secondary-color);
+    margin-bottom: 0.75rem;
+}
+
+.book-edit__cover {
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #EDE9E0;
+}
+
+.book-edit__img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    display: block;
+}
+
+.book-edit__file-input {
+    display: none;
+}
+
+.book-edit__photo-link {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: var(--secondary-color);
+    text-decoration: underline;
+    margin-top: 0.75rem;
+    cursor: pointer;
+}
+
+.book-edit__photo-link:hover {
+    color: var(--primary-color);
+}
+
+.book-edit__form-col {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.25rem;
+}
+
+.book-edit__form-col .form-input {
+    background-color: #EDF2F6;
+}
+
+.book-edit__textarea {
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.book-edit__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A6A6A6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+.book-edit__submit {
+    width: 75%;
+    margin-top: 0.5rem;
+}
+
+/* ============================================================
    Page d'erreur
    ============================================================ */
 .error-page {
@@ -1453,5 +1538,20 @@ body {
 
     .book-breadcrumb {
         display: none;
+    }
+
+    /* Book edit — mobile */
+    .book-edit {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 1.5rem;
+    }
+
+    .book-edit__img {
+        max-height: 280px;
+    }
+
+    .book-edit__submit {
+        width: 100%;
     }
 }
