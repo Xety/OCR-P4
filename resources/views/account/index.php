@@ -141,7 +141,12 @@
                         </td>
                         <td class="table-books__td table-books__actions">
                             <a href="/books/<?= $book->getId() ?>/edit" class="table-books__action">Éditer</a>
-                            <a href="/books/<?= $book->getId() ?>/delete" class="table-books__action table-books__action--delete">Supprimer</a>
+                            <form method="POST" action="/books/<?= $book->getId() ?>">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <button type="submit" class="table-books__action table-books__action--delete">
+                                    Supprimer
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>

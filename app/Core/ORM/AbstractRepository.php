@@ -151,6 +151,7 @@ abstract class AbstractRepository
 
         $meta = $this->getEntityClass()::metadata();
         $stmt = $this->pdo->prepare(sprintf('DELETE FROM %s WHERE id = :id', $meta['table']));
+
         return $stmt->execute(['id' => $entity->getId()]);
     }
 

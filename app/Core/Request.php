@@ -50,8 +50,16 @@ final class Request
     {
         $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
         $this->uri = parse_url($rawUri, PHP_URL_PATH) ?: '/';
-        $this->method = HttpMethod::from(strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET'));
         $this->query = $_GET;
         $this->body = $_POST;
+
+        $rawMethod = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+
+        // Method spoofing : <input type="hidden" name="_method" value="DELETE">
+        if ($rawMethod === 'POST' && isset($_POST['_method'])) {
+            $rawMethod = strtoupper($_POST['_method']);
+        }
+
+        $this->method = HttpMethod::from($rawMethod);
     }
 }

@@ -786,7 +786,7 @@ body {
 }
 
 .table-books__actions {
-    white-space: nowrap;
+    display: flex;
 }
 
 .table-books__action {
@@ -802,6 +802,11 @@ body {
 
 .table-books__action--delete {
     color: #E05252;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
 }
 
 .table-books__empty {

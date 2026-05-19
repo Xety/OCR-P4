@@ -75,6 +75,7 @@ final class Application
         $this->router->get('/books/{id}/edit', $bookController->edit(...));
         $this->router->post('/books/{id}/edit', $bookController->update(...));
         $this->router->get('/books/{id}', $bookController->show(...));
+        $this->router->delete('/books/{id}', $bookController->destroy(...));
 
         $authController = new AuthController($this->view, $this->db);
         $this->router->get('/login', $authController->showLogin(...));

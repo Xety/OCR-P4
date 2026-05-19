@@ -16,6 +16,10 @@ final class BookController extends AbstractController
 {
     /**
      * Affiche la liste paginée de tous les livres.
+     *
+     * @param Request $request
+     *
+     * @return string
      */
     public function index(Request $request): string
     {
@@ -33,6 +37,10 @@ final class BookController extends AbstractController
 
     /**
      * Affiche le détail d'un livre.
+     *
+     * @param Request $request
+     *
+     * @return string
      */
     public function show(Request $request): string
     {
@@ -157,6 +165,43 @@ final class BookController extends AbstractController
         $bookRepo->save($book);
 
         $_SESSION['flash_success'] = 'Livre mis à jour avec succès.';
+        Redirect::to('/account');
+    }
+
+    /**
+     * Supprime un livre de la collection de l'utilisateur courant.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function destroy(Request $request): string
+    {
+        $this->requireAuth();
+
+        $id = (int) ($request->params['id'] ?? 0);
+        $bookRepo = new BookRepository($this->db);
+        $book = $bookRepo->find($id);
+
+        if ($book === null) {
+            Redirect::to('/account');
+        }
+
+        $this->requireOwner($book);
+
+        $photo = $book->getPhoto();
+
+        $deleted = $bookRepo->delete($book);
+
+        // Suppression de la photo si elle existe
+        if ($deleted && $photo !== null) {
+            $photoPath = dirname(__DIR__, 2) . '/public/images/books/' . $photo;
+            if (is_file($photoPath)) {
+                unlink($photoPath);
+            }
+        }
+
+        $_SESSION['flash_success'] = 'Livre supprimé avec succès.';
         Redirect::to('/account');
     }
 
