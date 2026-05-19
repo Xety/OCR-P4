@@ -14,7 +14,7 @@
 
     <div class="messaging__panel">
 
-        <a href="/messages" class="messaging__back">← retour</a>
+        <a href="/conversations" class="messaging__back">← retour</a>
 
         <div class="messaging__panel-header">
             <div class="conversation-item__avatar" aria-hidden="true">

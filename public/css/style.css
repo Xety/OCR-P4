@@ -158,6 +158,20 @@ body {
     flex-direction: column;
 }
 
+/* Variante messagerie : hauteur contrainte pour le scroll interne */
+.main--messaging {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    overflow: hidden;
+}
+
+body:has(.main--messaging) {
+    height: 100vh;
+    overflow: hidden;
+}
+
 /* ============================================================
    Page header
    ============================================================ */
@@ -682,6 +696,10 @@ body {
     color: var(--primary-color);
 }
 
+.account-profile > .btn {
+    margin-top: auto;
+}
+
 /* Carte formulaire droite */
 .account-form {
     padding: 2.5rem 5.5rem;
@@ -785,8 +803,8 @@ body {
     max-width: 220px;
 }
 
-.table-books__actions {
-    display: flex;
+.table-books__actions form {
+    display: inline;
 }
 
 .table-books__action {
@@ -1683,6 +1701,10 @@ body {
 
     .account-profile {
         flex: none;
+    }
+
+    .account-profile > .btn {
+        margin-top: 30px;
     }
 
     .account-books {

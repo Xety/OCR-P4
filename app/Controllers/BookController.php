@@ -65,14 +65,90 @@ final class BookController extends AbstractController
     }
 
 
-     /**
-      * Affiche le formulaire d'édition d'un livre.
+    /**
+     * Affiche le formulaire de création d'un livre.
+     */
+    public function create(Request $request): string
+    {
+        $this->requireAuth();
 
-      * @param Request $request
+        return $this->view->render('books/create', [
+            'title' => 'Ajouter un livre',
+            'old'   => [],
+            'error' => null,
+        ]);
+    }
 
-      * @return string
-      */
-     public function edit(Request $request): string
+    /**
+     * Traite la soumission du formulaire de création d'un livre.
+     */
+    public function store(Request $request): string
+    {
+        $this->requireAuth();
+
+        $title       = trim($request->body['title'] ?? '');
+        $author      = trim($request->body['author'] ?? '');
+        $description = trim($request->body['description'] ?? '');
+        $isAvailable = ($request->body['is_available'] ?? '1') === '1';
+
+        $validator = new Validator($request->body, [
+            'title'        => [new Required()],
+            'author'       => [new Required()],
+            'description'  => [new Required()],
+            'is_available' => [new Boolean()],
+        ]);
+
+        $renderError = function (string $error) use ($title, $author, $description, $isAvailable): string {
+            return $this->view->render('books/create', [
+                'title' => 'Ajouter un livre',
+                'error' => $error,
+                'old'   => [
+                    'title'        => $title,
+                    'author'       => $author,
+                    'description'  => $description,
+                    'is_available' => $isAvailable ? '1' : '0',
+                ],
+            ]);
+        };
+
+        if ($validator->fails()) {
+            return $renderError($validator->firstError());
+        }
+
+        $authData = Auth::user();
+        $book = new BookEntity();
+        $book->fill([
+            'userId'      => (int) $authData['id'],
+            'title'       => $title,
+            'author'      => $author,
+            'description' => $description,
+            'isAvailable' => $isAvailable,
+        ]);
+
+        $bookRepo = new BookRepository($this->db);
+        $book = $bookRepo->save($book);
+
+        // Gestion de l'upload photo (après save pour avoir l'ID)
+        try {
+            $photo = $this->handlePhotoUpload($book);
+        } catch (\RuntimeException $e) {
+            $bookRepo->delete($book);
+            return $renderError($e->getMessage());
+        }
+
+        if ($photo !== null) {
+            $book->fill(['photo' => $photo]);
+            $bookRepo->save($book);
+        }
+
+        $_SESSION['flash_success'] = 'Livre ajouté avec succès.';
+        Redirect::to('/account');
+    }
+
+    /**
+     * Affiche le formulaire d'édition d'un livre.
+     */
+    public function edit(Request $request): string
     {
         $this->requireAuth();
 

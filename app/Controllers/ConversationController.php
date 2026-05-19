@@ -29,7 +29,7 @@ final class ConversationController extends AbstractController
 
         return $this->view->render('conversations/index', [
             'title' => 'Messagerie',
-            'mainClass' => 'main--full',
+            'mainClass' => 'main--messaging',
             'conversations' => $conversations,
         ]);
     }
@@ -66,7 +66,7 @@ final class ConversationController extends AbstractController
 
         return $this->view->render('conversations/show', [
             'title' => 'Messagerie',
-            'mainClass' => 'main--full',
+            'mainClass' => 'main--messaging',
             'conversations' => $conversations,
             'conversation' => $conversation,
             'messages' => $messages,

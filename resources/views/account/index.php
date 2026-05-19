@@ -43,6 +43,7 @@
                 <?= count($books) ?> livre<?= count($books) > 1 ? 's' : '' ?>
             </span>
         </div>
+        <a href="/books/create" class="btn btn--outline">Créer un livre</a>
     </div>
 
     <!-- Carte formulaire -->
