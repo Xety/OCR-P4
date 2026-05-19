@@ -21,7 +21,7 @@ final class PageController extends AbstractController
         $bookRepo = new BookRepository($this->db);
         $latestBooks = $bookRepo->findLatest(4);
 
-        return $this->view->render('pages/home', [
+        return $this->view->render('pages/index', [
             'title' => 'Accueil',
             'mainClass' => 'main--full',
             'latestBooks' => $latestBooks,
