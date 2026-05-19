@@ -65,29 +65,46 @@ Navigateur affiche la page
 
 ```
 app/
-├── Contracts/     Interfaces (RendererInterface, ModelInterface)
-├── Controllers/   Contrôleurs (un par ressource)
-├── Core/          Noyau du framework (Application, Router, View, Request, Database…)
-├── Entities/      Objets de données immuables (readonly, sans PDO)
-├── Enums/         Énumérations PHP (HttpMethod)
-├── helpers.php    Fonctions globales (config())
-└── Repositories/  Accès base de données — retournent des Entities
+├── Contracts/                  Interfaces (RendererInterface, RuleInterface)
+├── Controllers/                Contrôleurs (un par ressource)
+├── Core/                       Noyau du framework
+│   ├── ORM/
+│   │   ├── AbstractEntity.php      Base entities : fill(), toRow(), fromRow()
+│   │   └── AbstractRepository.php  Base repositories : find(), save(), delete()
+│   ├── Helpers/
+│   │   ├── DateHelper.php
+│   │   └── StringHelper.php
+│   ├── Application.php         Bootstrap : dépendances + enregistrement des routes
+│   ├── Auth.php                Session PHP (login, logout, user())
+│   ├── Database.php            Singleton PDO PostgreSQL
+│   ├── HttpMethod.php          Enum (Get, Post, Put, Patch, Delete)
+│   ├── Redirect.php
+│   ├── Request.php             Encapsule $_SERVER, $_GET, $_POST + method spoofing
+│   ├── Router.php              Table de routage + dispatch (statique + dynamique)
+│   └── View.php                Moteur de rendu PHP (layout + extract)
+├── Entities/                   Objets de données (sans PDO)
+├── Repositories/               Accès base de données — retournent des Entities
+├── Validation/                 Système de validation des formulaires
+│   ├── Rules/                  (Required, Email, MinLength, Confirmed…)
+│   └── Validator.php
+└── helpers.php                 Fonctions globales (config(), e())
 bootstrap/
 └── app.php        Point de démarrage : charge .env et instancie Application
 config/
 ├── app.php        Configuration application (name, env…)
-└── db.php         Configuration base de données (host, port, name…)
+├── db.php         Configuration base de données (host, port, name…)
+└── view.php       Configuration des vues (chemin, layout)
 database/
-└── schema.sql     Schéma SQL à exécuter manuellement
+├── schema.sql     Schéma SQL (PostgreSQL)
+└── seed.php       Données de test (utilisateurs, livres)
 public/
 ├── index.php      Front controller (seul fichier web-accessible)
 ├── css/style.css
-└── js/header.js
+├── js/app.js
+└── images/
+    └── books/     Photos de couvertures uploadées
 resources/
 └── views/         Templates PHP
-    ├── layout.php
-    ├── partials/  (header, footer)
-    └── users/
 ```
 
 ---
@@ -95,12 +112,24 @@ resources/
 ## Installation
 
 ```bash
-# 1. Installer les dépendances
+# 1. Cloner le dépôt
+git clone https://github.com/Xety/OCR-P4.git
+cd OCR-P4
+
+# 2. Installer les dépendances
 composer install
 
-# 2. Copier et remplir le fichier d'environnement
+# 3. Copier et remplir le fichier d'environnement
 cp .env.example .env
 
-# 3. Créer la base de données PostgreSQL puis exécuter le schéma
+# 4. Créer la base de données PostgreSQL puis exécuter le schéma
 psql -U postgres -d ocr_p4 -f database/schema.sql
+
+#5. Optionnel : Seeder la base de donnée avec des données génériques :
+php database/seed.php
+
+# Comptes génériques :
+# alice@example.com | password
+# bob@example.com | password
+# clara@example.com | password
 ```
