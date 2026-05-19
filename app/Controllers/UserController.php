@@ -12,6 +12,9 @@ use App\Repositories\UserRepository;
 
 final class UserController extends AbstractController
 {
+    /**
+     * Affiche le profil d'un utilisateur, avec la liste de ses livres.
+     */
     public function show(Request $request): string
     {
         $id = (int) ($request->params['id'] ?? 0);
@@ -35,7 +38,7 @@ final class UserController extends AbstractController
         $authData = Auth::user();
         $authId   = $authData !== null ? (int) $authData['id'] : null;
 
-        return $this->view->render('pages/user', [
+        return $this->view->render('users/show', [
             'title'       => e($user->getName()) . ' — Profil',
             'user'        => $user,
             'books'       => $books,

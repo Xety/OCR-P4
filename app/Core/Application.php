@@ -84,7 +84,7 @@ final class Application
         $this->router->get('/logout', $authController->logout(...));
 
         $accountController = new AccountController($this->view, $this->db);
-        $this->router->get('/account', $accountController->show(...));
+        $this->router->get('/account', $accountController->index(...));
         $this->router->post('/account', $accountController->update(...));
 
         $userController = new UserController($this->view, $this->db);

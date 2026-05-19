@@ -22,7 +22,7 @@ final class AccountController extends AbstractController
      *
      * @return string
      */
-    public function show(Request $request): string
+    public function index(Request $request): string
     {
         $this->requireAuth();
 
@@ -42,7 +42,7 @@ final class AccountController extends AbstractController
             unset($_SESSION['flash_success']);
         }
 
-        return $this->view->render('pages/account', [
+        return $this->view->render('account/index', [
             'title' => 'Mon compte',
             'user' => $user,
             'books' => $books,
@@ -88,7 +88,7 @@ final class AccountController extends AbstractController
         $memberSince = DateHelper::elapsed($user->getCreatedAt());
 
         $renderError = function (string $error) use ($user, $books, $memberSince, $name, $email): string {
-            return $this->view->render('pages/account', [
+            return $this->view->render('account/index', [
                 'title'=> 'Mon compte',
                 'user'=> $user,
                 'books'=> $books,

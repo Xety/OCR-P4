@@ -24,7 +24,7 @@ final class BookController extends AbstractController
         $bookRepo = new BookRepository($this->db);
         $books = $bookRepo->findAllWithSearch($search);
 
-        return $this->view->render('pages/books', [
+        return $this->view->render('books/index', [
             'title' => "Nos livres à l'échange",
             'books' => $books,
             'search' => $search,
@@ -48,7 +48,7 @@ final class BookController extends AbstractController
         $authData = Auth::user();
         $authId   = $authData !== null ? (int) $authData['id'] : null;
 
-        return $this->view->render('pages/book', [
+        return $this->view->render('books/show', [
             'title' => e($book->getTitle()) . ' — Livre à l\'échange',
             'mainClass' => 'main--full',
             'book' => $book,
@@ -78,7 +78,7 @@ final class BookController extends AbstractController
 
         $this->requireOwner($book);
 
-        return $this->view->render('pages/book-edit', [
+        return $this->view->render('books/edit', [
             'title' => 'Modifier — ' . e($book->getTitle()),
             'book' => $book,
             'old' => [],
@@ -122,7 +122,7 @@ final class BookController extends AbstractController
         ]);
 
         $renderError = function (string $error) use ($book, $title, $author, $description, $isAvailable): string {
-            return $this->view->render('pages/book-edit', [
+            return $this->view->render('books/edit', [
                 'title' => 'Modifier — ' . e($book->getTitle()),
                 'book' => $book,
                 'error' => $error,
