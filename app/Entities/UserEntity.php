@@ -21,6 +21,16 @@ final class UserEntity extends AbstractEntity
     private ?DateTimeImmutable $createdAt = null;
     private ?string $password = null;
 
+    /**
+     * Retourne une instance représentant un utilisateur supprimé.
+     *
+     * @return self Une instance de UserEntity avec des valeurs par défaut indiquant un utilisateur supprimé.
+     */
+    public static function deleted(): self
+    {
+        return new self(['name' => 'Utilisateur supprimé']);
+    }
+
     public function getName(): string
     {
         return $this->name;

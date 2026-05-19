@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Core\Auth;
 use App\Core\Helpers\DateHelper;
 use App\Core\Request;
 use App\Repositories\BookRepository;
@@ -31,11 +32,15 @@ final class UserController extends AbstractController
         $books = $bookRepo->findByUserId($id);
         $memberSince = DateHelper::elapsed($user->getCreatedAt());
 
+        $authData = Auth::user();
+        $authId   = $authData !== null ? (int) $authData['id'] : null;
+
         return $this->view->render('pages/user', [
-            'title' => e($user->getName()) . ' — Profil',
-            'user' => $user,
-            'books' => $books,
+            'title'       => e($user->getName()) . ' — Profil',
+            'user'        => $user,
+            'books'       => $books,
             'memberSince' => $memberSince,
+            'authId'      => $authId,
         ]);
     }
 }

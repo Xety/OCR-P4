@@ -12,11 +12,11 @@ use DateTimeImmutable;
  */
 final class BookEntity extends AbstractEntity
 {
-    protected static array $hidden = [
-        'userName',
+    protected static array $relationships = [
+        'creator',
     ];
 
-    private ?string $userName = null;
+    private ?UserEntity $creator = null;
     private int $userId = 0;
     private string $title = '';
     private string $author = '';
@@ -25,14 +25,14 @@ final class BookEntity extends AbstractEntity
     private bool $isAvailable = true;
     private ?DateTimeImmutable $createdAt = null;
 
-    public function getUserName(): ?string
+    public function getCreator(): ?UserEntity
     {
-        return $this->userName;
+        return $this->creator;
     }
 
-    public function setUserName(?string $userName): void
+    public function setCreator(?UserEntity $creator): void
     {
-        $this->userName = $userName;
+        $this->creator = $creator;
     }
 
     public function getUserId(): int

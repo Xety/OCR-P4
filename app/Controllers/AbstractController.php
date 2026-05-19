@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Contracts\RendererInterface;
 use App\Core\Auth;
 use App\Core\Redirect;
+use App\Repositories\UserRepository;
 use PDO;
 
 /**
@@ -28,6 +29,14 @@ abstract class AbstractController
     protected function requireAuth(): void
     {
         if (! Auth::isAuthenticated()) {
+            Redirect::to('/login');
+        }
+
+        $authData = Auth::user();
+        $userRepo = new UserRepository($this->db);
+
+        if ($userRepo->find((int) $authData['id']) === null) {
+            Auth::logout();
             Redirect::to('/login');
         }
     }

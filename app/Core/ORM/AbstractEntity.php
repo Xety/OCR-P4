@@ -48,6 +48,17 @@ abstract class AbstractEntity
     protected static array $hidden = [];
 
     /**
+     * Propriétés hydratées manuellement via JOIN — ne correspondent à aucune colonne en base.
+     * Toujours exclues de `fromRow()` et `toRow()`, même avec `withHidden = true`.
+     *
+     * Surcharger dans les entités enfants pour déclarer les relations :
+     * `protected static array $relationships = ['otherUser', 'lastMessage'];`
+     *
+     * @var array Noms de propriétés (camelCase) correspondant à des objets liés.
+     */
+    protected static array $relationships = [];
+
+    /**
      * Cache des métadonnées calculées par réflexion, indexé par classe.
      *
      * @var array<class-string, array{table: string, columns: array<string, string>}>
@@ -147,6 +158,11 @@ abstract class AbstractEntity
 
         $meta = static::metadata();
         foreach ($meta['columns'] as $property => $column) {
+            // Ignore les propriétés de relations (ex. `otherUser`) qui ne correspondent pas à des colonnes en base.
+            if (in_array($property, static::$relationships, true)) {
+                continue;
+            }
+            // Ignore les propriétés cachées si `$withHidden` est false (ex. `password`).
             if (! $withHidden && in_array($property, static::$hidden, true)) {
                 continue;
             }
@@ -167,17 +183,28 @@ abstract class AbstractEntity
      * Exporte l'entité vers un tableau prêt pour PDO (clé = colonne snake_case).
      *
      * @param bool $withHidden Si true, inclut les champs cachés (ex. password) même s'ils sont dans `$hidden`.
+     * @param bool $skipNull Si true, exclut les colonnes dont la valeur est null (utile pour INSERT : laisse les DEFAULT de la BDD s'appliquer).
      *
      * @return array [ colonne snake_case => valeur ] à partir des propriétés de l'entité
      */
-    public function toRow(bool $withHidden = false): array
+    public function toRow(bool $withHidden = false, bool $skipNull = false): array
     {
         $row = [];
         foreach (static::metadata()['columns'] as $property => $column) {
+            // Ignore les propriétés de relations (ex. `otherUser`) qui ne correspondent pas à des colonnes en base.
+            if (in_array($property, static::$relationships, true)) {
+                continue;
+            }
+            // Ignore les propriétés cachées si `$withHidden` est false (ex. `password`).
             if (! $withHidden && in_array($property, static::$hidden, true)) {
                 continue;
             }
-            $row[$column] = self::normalizeOutgoing($this->readProperty($property));
+            $value = self::normalizeOutgoing($this->readProperty($property));
+            // Ignore les valeurs null si $skipNull est true (laisse les DEFAULT de la BDD s'appliquer).
+            if ($skipNull && $value === null) {
+                continue;
+            }
+            $row[$column] = $value;
         }
 
         return $row;

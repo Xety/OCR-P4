@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Entities\BookEntity;
+use App\Entities\UserEntity;
 use App\Core\ORM\AbstractRepository;
 use PDO;
 
@@ -58,7 +59,10 @@ final class BookRepository extends AbstractRepository
 
         return array_map(
             function (array $row): BookEntity {
-                return BookEntity::fromRow($row, withHidden: true);
+                $book = BookEntity::fromRow($row);
+                $book->setCreator(new UserEntity(['id' => (int) $row['user_id'], 'name' => $row['user_name']]));
+
+                return $book;
             },
             $stmt->fetchAll(PDO::FETCH_ASSOC),
         );
@@ -83,7 +87,10 @@ final class BookRepository extends AbstractRepository
             return null;
         }
 
-        return BookEntity::fromRow($row, withHidden: true);
+        $book = BookEntity::fromRow($row);
+        $book->setCreator(new UserEntity(['id' => (int) $row['user_id'], 'name' => $row['user_name']]));
+
+        return $book;
     }
 
     /**
@@ -107,7 +114,10 @@ final class BookRepository extends AbstractRepository
 
         return array_map(
             function (array $row): BookEntity {
-                return BookEntity::fromRow($row, withHidden: true);
+                $book = BookEntity::fromRow($row);
+                $book->setCreator(new UserEntity(['id' => (int) $row['user_id'], 'name' => $row['user_name']]));
+
+                return $book;
             },
             $stmt->fetchAll(PDO::FETCH_ASSOC),
         );

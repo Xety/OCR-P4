@@ -1,5 +1,6 @@
 <?php
 /** @var \App\Entities\BookEntity $book */
+/** @var int|null $authId */
 ?>
 
 <div class="book-breadcrumb">
@@ -43,11 +44,18 @@
         <p class="book-split__label">Propriétaire</p>
         <div class="book-split__owner">
             <img src="/images/icon-user.svg" alt="" class="book-split__owner-avatar" />
-            <a class="book-split__owner-name" href="/users/<?= e($book->getUserId()) ?>"><?= e($book->getUserName() ?? '') ?></a>
+            <a class="book-split__owner-name" href="/users/<?= e($book->getUserId()) ?>"><?= e($book->getCreator()?->getName() ?? '') ?></a>
 
         </div>
 
-        <a href="#" class="btn btn--primary book-split__cta">Envoyer un message</a>
+        <?php if ($authId !== null && $authId !== (int) $book->getUserId()): ?>
+            <form method="POST" action="/conversations">
+                <input type="hidden" name="user_id" value="<?= $book->getUserId() ?>" />
+                <button type="submit" class="btn btn--primary book-split__cta">Envoyer un message</button>
+            </form>
+        <?php elseif ($authId === null): ?>
+            <a href="/login" class="btn btn--primary book-split__cta">Envoyer un message</a>
+        <?php endif; ?>
 
     </div>
 </div>

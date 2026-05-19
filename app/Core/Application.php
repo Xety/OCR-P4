@@ -7,6 +7,7 @@ namespace App\Core;
 use App\Controllers\AccountController;
 use App\Controllers\AuthController;
 use App\Controllers\BookController;
+use App\Controllers\ConversationController;
 use App\Controllers\ErrorController;
 use App\Controllers\PageController;
 use App\Controllers\UserController;
@@ -88,6 +89,12 @@ final class Application
 
         $userController = new UserController($this->view, $this->db);
         $this->router->get('/users/{id}', $userController->show(...));
+
+        $conversationController = new ConversationController($this->view, $this->db);
+        $this->router->get('/conversations', $conversationController->index(...));
+        $this->router->post('/conversations', $conversationController->create(...));
+        $this->router->get('/conversations/{id}', $conversationController->show(...));
+        $this->router->post('/conversations/{id}/messages', $conversationController->store(...));
 
         $errorController = new ErrorController($this->view, $this->db);
         $this->router->fallback($errorController->notFound(...));

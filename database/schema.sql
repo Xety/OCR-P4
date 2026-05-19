@@ -36,3 +36,41 @@ CREATE TABLE "books" (
 );
 
 CREATE INDEX books_user_id_idx ON books USING btree (user_id);
+
+-- -------------------------------------------------------
+-- Table conversations
+-- -------------------------------------------------------
+CREATE SEQUENCE IF NOT EXISTS conversations_id_seq;
+
+DROP TABLE IF EXISTS "conversations" CASCADE;
+
+CREATE TABLE "conversations" (
+    "id" int4 NOT NULL DEFAULT nextval('conversations_id_seq'::regclass),
+    "creator_id" int4 REFERENCES users (id) ON DELETE SET NULL,
+    "receiver_id" int4 REFERENCES users (id) ON DELETE SET NULL,
+    "created_at" timestamp DEFAULT now(),
+    PRIMARY KEY ("id"),
+    CONSTRAINT check_user_order CHECK (creator_id < receiver_id),
+    CONSTRAINT unique_conversation UNIQUE (creator_id, receiver_id)
+);
+
+CREATE INDEX conversations_creator_id_idx ON conversations USING btree (creator_id);
+CREATE INDEX conversations_receiver_id_idx ON conversations USING btree (receiver_id);
+
+-- -------------------------------------------------------
+-- Table conversation_messages
+-- -------------------------------------------------------
+CREATE SEQUENCE IF NOT EXISTS conversation_messages_id_seq;
+
+DROP TABLE IF EXISTS "conversation_messages";
+
+CREATE TABLE "conversation_messages" (
+    "id" int4 NOT NULL DEFAULT nextval('conversation_messages_id_seq'::regclass),
+    "conversation_id" int4 NOT NULL REFERENCES conversations (id) ON DELETE CASCADE,
+    "sender_id" int4 REFERENCES users (id) ON DELETE SET NULL,
+    "content" text NOT NULL,
+    "created_at" timestamp DEFAULT now(),
+    PRIMARY KEY ("id")
+);
+
+CREATE INDEX conversation_messages_conversation_id_idx ON conversation_messages USING btree (conversation_id);

@@ -47,7 +47,7 @@
                     <div class="book-card__body">
                         <h3 class="book-card__title"><?= e($book->getTitle()) ?></h3>
                         <p class="book-card__author"><?= e($book->getAuthor()) ?></p>
-                        <p class="book-card__seller">Vendu par : <span><?= e($book->getUserName()) ?></span></p>
+                        <p class="book-card__seller">Vendu par : <span><?= e($book->getCreator()?->getName()) ?></span></p>
                     </div>
                 </a>
             <?php endforeach; ?>

@@ -160,7 +160,7 @@ abstract class AbstractRepository
     private function insert(AbstractEntity $entity): AbstractEntity
     {
         $meta = $this->getEntityClass()::metadata();
-        $row = $entity->toRow(true); // inclut les champs hidden (ex. password) pour l'INSERT
+        $row = $entity->toRow(withHidden: true, skipNull: true);
         unset($row['id']);
 
         $columns = array_keys($row);

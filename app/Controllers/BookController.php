@@ -9,11 +9,7 @@ use App\Core\Redirect;
 use App\Core\Request;
 use App\Entities\BookEntity;
 use App\Repositories\BookRepository;
-use App\Validation\Rules\AllowedExtensions;
-use App\Validation\Rules\Boolean;
-use App\Validation\Rules\MaxFileSize;
-use App\Validation\Rules\Required;
-use App\Validation\Rules\UploadNoError;
+use App\Validation\Rules\{AllowedExtensions,Boolean, MaxFileSize, Required, UploadNoError};
 use App\Validation\Validator;
 
 final class BookController extends AbstractController
@@ -49,10 +45,14 @@ final class BookController extends AbstractController
             Redirect::to('/books');
         }
 
+        $authData = Auth::user();
+        $authId   = $authData !== null ? (int) $authData['id'] : null;
+
         return $this->view->render('pages/book', [
             'title' => e($book->getTitle()) . ' — Livre à l\'échange',
             'mainClass' => 'main--full',
             'book' => $book,
+            'authId' => $authId,
         ]);
     }
 

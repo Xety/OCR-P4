@@ -2,6 +2,7 @@
 /** @var \App\Entities\UserEntity $user */
 /** @var array<\App\Entities\BookEntity> $books */
 /** @var string $memberSince */
+/** @var int|null $authId */
 ?>
 
 <div class="account-top user-top">
@@ -28,7 +29,14 @@
             </span>
         </div>
 
-        <a href="#" class="btn btn--outline user-profile__cta">Écrire un message</a>
+        <?php if ($authId !== null && $authId !== $user->getId()): ?>
+            <form method="POST" action="/conversations">
+                <input type="hidden" name="user_id" value="<?= $user->getId() ?>" />
+                <button type="submit" class="btn btn--outline user-profile__cta">Écrire un message</button>
+            </form>
+        <?php elseif ($authId === null): ?>
+            <a href="/login" class="btn btn--outline user-profile__cta">Écrire un message</a>
+        <?php endif; ?>
     </div>
 
     <div class="account-books account-books--full">

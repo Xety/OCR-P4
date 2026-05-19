@@ -14,10 +14,9 @@ use App\Core\Auth;
 
         <div class="header__actions" id="header-actions">
             <?php if (Auth::isAuthenticated()): ?>
-                <a href="#" class="header__action">
+                <a href="/conversations" class="header__action">
                     <img src="/images/icon-messagerie.svg" alt="IconMessagerie" />
                     Messagerie
-                    <span class="header__badge">1</span>
                 </a>
                 <a href="/account" class="header__action">
                     <img src="/images/icon-user.svg" alt="Icon User" />
