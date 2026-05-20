@@ -5,9 +5,9 @@
 | Outil | Rôle |
 |---|---|
 | PHP 8.4+ | Langage principal |
-| Composer | Autoloading PSR-4 + gestion de dépendances |
+| Composer v2 | Autoloading PSR-4 + gestion de dépendances |
 | vlucas/phpdotenv | Lecture du fichier `.env` |
-| PostgreSQL | Base de données (via PDO) |
+| PostgreSQL 18 | Base de données (via PDO) |
 
 ---
 

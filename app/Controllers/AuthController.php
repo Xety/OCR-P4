@@ -144,8 +144,7 @@ final class AuthController extends AbstractController
         $validator = new Validator($request->body, [
             'name' => [new Required()],
             'email' => [new Required(), new Email()],
-            'password' => [new Required(), new MinLength(8)],
-            'password_confirmation' => [new Confirmed('password')],
+            'password' => [new Required(), new MinLength(8)]
         ]);
 
         if ($validator->fails()) {

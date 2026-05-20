@@ -70,7 +70,7 @@ final class AccountController extends AbstractController
         $password = $request->body['password'] ?? '';
 
         $rules = [
-            'name'  => [new Required()],
+            'name' => [new Required()],
             'email' => [new Required(), new Email()],
         ];
 
@@ -89,12 +89,12 @@ final class AccountController extends AbstractController
 
         $renderError = function (string $error) use ($user, $books, $memberSince, $name, $email): string {
             return $this->view->render('account/index', [
-                'title'=> 'Mon compte',
-                'user'=> $user,
-                'books'=> $books,
-                'memberSince'=> $memberSince,
-                'error'=> $error,
-                'old'=> ['name'=> $name, 'email'=> $email],
+                'title' => 'Mon compte',
+                'user' => $user,
+                'books' => $books,
+                'memberSince' => $memberSince,
+                'error' => $error,
+                'old' => ['name' => $name, 'email' => $email],
             ]);
         };
 
@@ -114,7 +114,6 @@ final class AccountController extends AbstractController
             'name' => $name,
             'email' => $email,
         ]);
-
         $userRepo->save($user);
 
         if ($password !== '') {

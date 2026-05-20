@@ -57,17 +57,6 @@ $old = $old ?? [];
                     >
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="password_confirmation">Confirmer le mot de passe</label>
-                    <input
-                        class="form-input"
-                        type="password"
-                        id="password_confirmation"
-                        name="password_confirmation"
-                        required
-                    >
-                </div>
-
                 <button type="submit" class="btn btn--primary">S'inscrire</button>
             </form>
 

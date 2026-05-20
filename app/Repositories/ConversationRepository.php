@@ -77,6 +77,8 @@ final class ConversationRepository extends AbstractRepository
             return $existing;
         }
 
+        // TODO : vérifier que les deux utilisateurs existent avant de créer la conversation pour éviter d'avoir des conversations avec des users supprimés
+
         $conversation = new ConversationEntity(['creatorId' => $creator, 'receiverId' => $receiver]);
 
         return $this->save($conversation);

@@ -50,7 +50,6 @@ CREATE TABLE "conversations" (
     "receiver_id" int4 REFERENCES users (id) ON DELETE SET NULL,
     "created_at" timestamp DEFAULT now(),
     PRIMARY KEY ("id"),
-    CONSTRAINT check_user_order CHECK (creator_id < receiver_id),
     CONSTRAINT unique_conversation UNIQUE (creator_id, receiver_id)
 );
 

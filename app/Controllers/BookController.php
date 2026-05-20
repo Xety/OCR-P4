@@ -74,7 +74,7 @@ final class BookController extends AbstractController
 
         return $this->view->render('books/create', [
             'title' => 'Ajouter un livre',
-            'old'   => [],
+            'old' => [],
             'error' => null,
         ]);
     }
@@ -86,15 +86,15 @@ final class BookController extends AbstractController
     {
         $this->requireAuth();
 
-        $title       = trim($request->body['title'] ?? '');
-        $author      = trim($request->body['author'] ?? '');
+        $title = trim($request->body['title'] ?? '');
+        $author = trim($request->body['author'] ?? '');
         $description = trim($request->body['description'] ?? '');
         $isAvailable = ($request->body['is_available'] ?? '1') === '1';
 
         $validator = new Validator($request->body, [
-            'title'        => [new Required()],
-            'author'       => [new Required()],
-            'description'  => [new Required()],
+            'title' => [new Required()],
+            'author' => [new Required()],
+            'description' => [new Required()],
             'is_available' => [new Boolean()],
         ]);
 
@@ -103,9 +103,9 @@ final class BookController extends AbstractController
                 'title' => 'Ajouter un livre',
                 'error' => $error,
                 'old'   => [
-                    'title'        => $title,
-                    'author'       => $author,
-                    'description'  => $description,
+                    'title' => $title,
+                    'author' => $author,
+                    'description' => $description,
                     'is_available' => $isAvailable ? '1' : '0',
                 ],
             ]);
@@ -118,12 +118,14 @@ final class BookController extends AbstractController
         $authData = Auth::user();
         $book = new BookEntity();
         $book->fill([
-            'userId'      => (int) $authData['id'],
-            'title'       => $title,
-            'author'      => $author,
+            'userId' => (int) $authData['id'],
+            'title' => $title,
+            'author' => $author,
             'description' => $description,
             'isAvailable' => $isAvailable,
         ]);
+
+        // TODO  vérifier les règles de validations avant le save du book pour éviter d'avoir un livre créé sans photo en cas d'erreur d'upload
 
         $bookRepo = new BookRepository($this->db);
         $book = $bookRepo->save($book);
