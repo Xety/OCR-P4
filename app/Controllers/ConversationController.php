@@ -11,6 +11,7 @@ use App\Entities\ConversationEntity;
 use App\Entities\ConversationMessageEntity;
 use App\Repositories\ConversationMessageRepository;
 use App\Repositories\ConversationRepository;
+use App\Repositories\UserRepository;
 use App\Validation\Rules\Required;
 use App\Validation\Validator;
 
@@ -127,15 +128,22 @@ final class ConversationController extends AbstractController
 
         $authData = Auth::user();
         $authId = (int) $authData['id'];
-        $targetId = (int) ($request->body['user_id'] ?? 0);
+        $receiverId = (int) ($request->body['user_id'] ?? 0);
 
         // Impossible de s'envoyer un message à soi-même
-        if ($targetId === 0 || $targetId === $authId) {
+        if ($receiverId === 0 || $receiverId === $authId) {
+            Redirect::to('/conversations');
+        }
+
+        // Vérifier que le destinataire existe bien en base de données
+        $userRepo = new UserRepository($this->db);
+
+        if ($userRepo->find($receiverId) === null) {
             Redirect::to('/conversations');
         }
 
         $convoRepo = new ConversationRepository($this->db);
-        $conversation = $convoRepo->findOrCreateBetween($authId, $targetId);
+        $conversation = $convoRepo->findOrCreateBetween($authId, $receiverId);
 
         Redirect::to('/conversations/' . $conversation->getId());
     }
