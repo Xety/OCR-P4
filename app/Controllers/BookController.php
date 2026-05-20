@@ -122,21 +122,19 @@ final class BookController extends AbstractController
             'title' => $title,
             'author' => $author,
             'description' => $description,
+            'photo' => null,
             'isAvailable' => $isAvailable,
         ]);
 
-        // TODO  vérifier les règles de validations avant le save du book pour éviter d'avoir un livre créé sans photo en cas d'erreur d'upload
-
-        $bookRepo = new BookRepository($this->db);
-        $book = $bookRepo->save($book);
-
-        // Gestion de l'upload photo (après save pour avoir l'ID)
+        // Gestion de l'upload photo
         try {
             $photo = $this->handlePhotoUpload($book);
         } catch (\RuntimeException $e) {
-            $bookRepo->delete($book);
             return $renderError($e->getMessage());
         }
+
+        $bookRepo = new BookRepository($this->db);
+        $book = $bookRepo->save($book);
 
         if ($photo !== null) {
             $book->fill(['photo' => $photo]);
