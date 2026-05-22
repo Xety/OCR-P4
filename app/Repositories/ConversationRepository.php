@@ -21,11 +21,12 @@ final class ConversationRepository extends AbstractRepository
      */
     public function findAllForUser(int $userId): array
     {
-        $sql = $sql = <<<SQL
+        $sql = <<<SQL
             SELECT
                 c.id, c.creator_id, c.receiver_id, c.created_at,
                 u.id   AS other_user_id,
                 u.name AS other_user_name,
+                u.avatar AS other_user_avatar,
                 /* Sous-requêtes pour récupérer le dernier message et sa date — optimisé pour éviter les N+1 */
                 (SELECT content    FROM conversation_messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
                 (SELECT created_at FROM conversation_messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) AS last_message_at
@@ -45,14 +46,13 @@ final class ConversationRepository extends AbstractRepository
 
             // Créer une entité UserEntity pour l'autre participant — sentinelle si l'utilisateur a été supprimé
             $otherUser = $row['other_user_id'] !== null
-                ? new UserEntity(['id' => (int) $row['other_user_id'], 'name' => $row['other_user_name']])
+                ? new UserEntity(['id' => (int) $row['other_user_id'], 'name' => $row['other_user_name'], 'avatar' => $row['other_user_avatar']])
                 : UserEntity::deleted();
             $conversation->setOtherUser($otherUser);
 
             // Créer une entité ConversationMessageEntity pour le dernier message (si existant)
             if ($row['last_message'] !== null) {
                 $lastMessage = new ConversationMessageEntity(['content' => $row['last_message'], 'createdAt' => $row['last_message_at'] !== null ? new DateTimeImmutable($row['last_message_at']) : null]);
-                //$lastMessage->setCreatedAt($row['last_message_at'] !== null ? new DateTimeImmutable($row['last_message_at']) : null);
                 $conversation->setLastMessage($lastMessage);
             }
 
@@ -70,11 +70,19 @@ final class ConversationRepository extends AbstractRepository
      */
     public function findOrCreateBetween(int $creator, int $receiver): ConversationEntity
     {
-        $existing = $this->findOneBy(['creatorId' => $creator, 'receiverId' => $receiver]);
+        // Vérification dans les deux sens : C→R ou R→C
+        $sql = <<<SQL
+            SELECT * FROM conversations
+            WHERE (creator_id = :c AND receiver_id = :r) OR (creator_id = :r AND receiver_id = :c)
+            LIMIT 1
+        SQL;
 
-        // Si une conversation existe déjà entre ces deux utilisateurs, la retourner.
-        if ($existing instanceof ConversationEntity) {
-            return $existing;
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':c' => $creator, ':r' => $receiver]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row !== false) {
+            return ConversationEntity::fromRow($row);
         }
 
         $conversation = new ConversationEntity(['creatorId' => $creator, 'receiverId' => $receiver]);

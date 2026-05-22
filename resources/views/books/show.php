@@ -43,7 +43,7 @@
 
         <p class="book-split__label">Propriétaire</p>
         <div class="book-split__owner">
-            <img src="/images/icon-user.svg" alt="" class="book-split__owner-avatar" />
+            <img src="<?= $book->getCreator()?->getAvatar() !== null ? '/images/avatars/' . e($book->getCreator()?->getAvatar()) : '/images/icon-user.svg' ?>" alt="" class="book-split__owner-avatar" />
             <a class="book-split__owner-name" href="/users/<?= e($book->getUserId()) ?>"><?= e($book->getCreator()?->getName() ?? '') ?></a>
 
         </div>

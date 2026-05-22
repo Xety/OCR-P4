@@ -24,12 +24,12 @@
     <div class="card account-profile">
         <div class="account-avatar">
             <img
-                src="/images/icon-user.svg"
+                src="<?= $user->getAvatar() !== null ? '/images/avatars/' . e($user->getAvatar()) : '/images/icon-user.svg' ?>"
                 alt="Avatar de <?= e($user->getName()) ?>"
                 class="account-avatar__img"
             />
         </div>
-        <a href="#" class="account-avatar__edit">modifier</a>
+        <label for="avatar" class="account-avatar__edit">modifier</label>
 
         <hr class="account-profile__sep" />
 
@@ -50,7 +50,8 @@
     <div class="card account-form">
         <h2 class="account-form__title">Vos informations personnelles</h2>
 
-        <form method="POST" action="/account">
+        <form method="POST" action="/account" enctype="multipart/form-data">
+            <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden />
             <div class="form-group">
                 <label for="email" class="form-label">Adresse email</label>
                 <input

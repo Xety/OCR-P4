@@ -17,7 +17,7 @@ $activeConversationId ??= null;
             <li>
                 <a href="/conversations/<?= $conv->getId() ?>" class="conversation-item<?= $conv->getId() === $activeConversationId ? ' conversation-item--active' : '' ?>">
                     <div class="conversation-item__avatar" aria-hidden="true">
-                        <?= e(mb_strtoupper(mb_substr($conv->getOtherUser()->getName(), 0, 1))) ?>
+                        <img src="<?= $conv->getOtherUser()?->getAvatar() !== null ? '/images/avatars/' . e($conv->getOtherUser()?->getAvatar()) : '/images/icon-user.svg' ?>" alt="" class="conversation-item__avatar-img" />
                     </div>
                     <div class="conversation-item__body">
                         <div class="conversation-item__head">

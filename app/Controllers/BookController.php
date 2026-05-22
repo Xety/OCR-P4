@@ -311,7 +311,7 @@ final class BookController extends AbstractController
 
         // Génération d'un nom de fichier unique et déplacement du fichier uploadé
         $ext = strtolower(pathinfo($uploadedFile['name'], PATHINFO_EXTENSION));
-        $filename = uniqid('book_', more_entropy: true) . '.' . $ext;
+        $filename = bin2hex(random_bytes(16)) . '.' . $ext;
         $dest = dirname(__DIR__, 2) . '/public/images/books/' . $filename;
 
         if (! move_uploaded_file($uploadedFile['tmp_name'], $dest)) {

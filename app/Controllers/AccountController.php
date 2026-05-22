@@ -8,11 +8,15 @@ use App\Core\Auth;
 use App\Core\Helpers\DateHelper;
 use App\Core\Redirect;
 use App\Core\Request;
+use App\Entities\UserEntity;
 use App\Repositories\BookRepository;
 use App\Repositories\UserRepository;
+use App\Validation\Rules\AllowedExtensions;
 use App\Validation\Rules\Email;
+use App\Validation\Rules\MaxFileSize;
 use App\Validation\Rules\MinLength;
 use App\Validation\Rules\Required;
+use App\Validation\Rules\UploadNoError;
 use App\Validation\Validator;
 
 final class AccountController extends AbstractController
@@ -110,9 +114,17 @@ final class AccountController extends AbstractController
             }
         }
 
+        // Gestion de l'upload d'avatar
+        try {
+            $newAvatar = $this->handleAvatarUpload($user);
+        } catch (\RuntimeException $e) {
+            return $renderError($e->getMessage());
+        }
+
         $user->fill([
             'name' => $name,
             'email' => $email,
+            'avatar' => $newAvatar,
         ]);
         $userRepo->save($user);
 
@@ -126,5 +138,54 @@ final class AccountController extends AbstractController
 
         $_SESSION['flash_success'] = 'Votre profil a été mis à jour.';
         Redirect::to('/account');
+    }
+
+    /**
+     * Gère l'upload de l'avatar de l'utilisateur, en validant le fichier et en supprimant l'ancien si nécessaire.
+     *
+     * @param UserEntity $user L'utilisateur en cours de modification
+     *
+     * @return string|null Le nom du fichier du nouvel avatar, ou l'avatar actuel si aucun fichier sélectionné
+     *
+     * @throws \RuntimeException
+     */
+    private function handleAvatarUpload(UserEntity $user): ?string
+    {
+        $uploadedFile = $_FILES['avatar'] ?? null;
+
+        // Si aucun fichier n'est uploadé, on conserve l'avatar actuel
+        if ($uploadedFile === null || $uploadedFile['error'] === UPLOAD_ERR_NO_FILE) {
+            return $user->getAvatar();
+        }
+
+        $validator = new Validator($_FILES, [
+            'avatar' => [
+                new UploadNoError(),
+                new MaxFileSize(2),
+                new AllowedExtensions(['jpg', 'jpeg', 'png', 'webp']),
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            throw new \RuntimeException($validator->firstError());
+        }
+
+        $ext = strtolower(pathinfo($uploadedFile['name'], PATHINFO_EXTENSION));
+        $filename = bin2hex(random_bytes(16)) . '.' . $ext;
+        $dest = dirname(__DIR__, 2) . '/public/images/avatars/' . $filename;
+
+        if (! move_uploaded_file($uploadedFile['tmp_name'], $dest)) {
+            throw new \RuntimeException('Erreur lors de l\'enregistrement de l\'avatar.');
+        }
+
+        $oldAvatar = $user->getAvatar();
+        if ($oldAvatar !== null) {
+            $oldPath = dirname(__DIR__, 2) . '/public/images/avatars/' . $oldAvatar;
+            if (is_file($oldPath)) {
+                unlink($oldPath);
+            }
+        }
+
+        return $filename;
     }
 }

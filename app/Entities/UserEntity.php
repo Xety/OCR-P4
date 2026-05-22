@@ -18,6 +18,7 @@ final class UserEntity extends AbstractEntity
 
     private string $name = '';
     private string $email = '';
+    private ?string $avatar = null;
     private ?DateTimeImmutable $createdAt = null;
     private ?string $password = null;
 
@@ -59,6 +60,16 @@ final class UserEntity extends AbstractEntity
     public function setCreatedAt(?DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): void
+    {
+        $this->avatar = $avatar;
     }
 
     public function getPassword(): ?string

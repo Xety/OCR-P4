@@ -18,7 +18,7 @@
 
         <div class="messaging__panel-header">
             <div class="conversation-item__avatar" aria-hidden="true">
-                <?= e(mb_strtoupper(mb_substr($conversation->getOtherUser()?->getName() ?? '?', 0, 1))) ?>
+                <img src="<?= $conversation->getOtherUser()?->getAvatar() !== null ? '/images/avatars/' . e($conversation->getOtherUser()?->getAvatar()) : '/images/icon-user.svg' ?>" alt="" class="conversation-item__avatar-img" />
             </div>
             <span class="messaging__panel-name"><?= e($conversation->getOtherUser()?->getName() ?? '') ?></span>
         </div>
@@ -29,7 +29,7 @@
                 <div class="message <?= $isMine ? 'message--mine' : 'message--theirs' ?>">
                     <?php if (! $isMine): ?>
                         <div class="message__avatar" aria-hidden="true">
-                            <?= e(mb_strtoupper(mb_substr($message->getSender()?->getName() ?? '', 0, 1))) ?>
+                            <img src="<?= $message->getSender()?->getAvatar() !== null ? '/images/avatars/' . e($message->getSender()?->getAvatar()) : '/images/icon-user.svg' ?>" alt="" class="message__avatar-img" />
                         </div>
                     <?php endif; ?>
                     <div class="message__content">

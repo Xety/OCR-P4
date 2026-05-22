@@ -22,7 +22,7 @@ final class ConversationMessageRepository extends AbstractRepository
     public function findByConversationId(int $conversationId): array
     {
         $stmt = $this->pdo->prepare(
-            'SELECT cm.*, u.name AS sender_name
+            'SELECT cm.*, u.name AS sender_name, u.avatar AS sender_avatar
              FROM conversation_messages cm
              LEFT JOIN users u ON cm.sender_id = u.id
              WHERE cm.conversation_id = :conversation_id
@@ -35,7 +35,7 @@ final class ConversationMessageRepository extends AbstractRepository
 
             // Créer une entité UserEntity pour l'expéditeur — sentinelle si l'utilisateur a été supprimé
             $sender = $row['sender_id'] !== null
-                ? new UserEntity(['id' => (int) $row['sender_id'], 'name' => $row['sender_name']])
+                ? new UserEntity(['id' => (int) $row['sender_id'], 'name' => $row['sender_name'], 'avatar' => $row['sender_avatar']])
                 : UserEntity::deleted();
             $message->setSender($sender);
 

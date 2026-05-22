@@ -78,7 +78,7 @@ final class BookRepository extends AbstractRepository
     public function findById(int $id): ?BookEntity
     {
         $stmt = $this->pdo->prepare(
-            'SELECT b.*, u.name AS user_name FROM books b INNER JOIN users u ON b.user_id = u.id WHERE b.id = :id'
+            'SELECT b.*, u.name AS user_name, u.avatar AS user_avatar FROM books b INNER JOIN users u ON b.user_id = u.id WHERE b.id = :id'
         );
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -88,7 +88,7 @@ final class BookRepository extends AbstractRepository
         }
 
         $book = BookEntity::fromRow($row);
-        $book->setCreator(new UserEntity(['id' => (int) $row['user_id'], 'name' => $row['user_name']]));
+        $book->setCreator(new UserEntity(['id' => (int) $row['user_id'], 'name' => $row['user_name'], 'avatar' => $row['user_avatar']]));
 
         return $book;
     }
