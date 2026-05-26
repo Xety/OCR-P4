@@ -49,6 +49,7 @@
                 class="messaging__input"
                 placeholder="Tapez votre message ici"
                 autocomplete="off"
+                title="Tapez votre message ici"
                 required
             />
             <button type="submit" class="btn btn--primary messaging__send">Envoyer</button>
