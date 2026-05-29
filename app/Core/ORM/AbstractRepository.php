@@ -40,18 +40,6 @@ abstract class AbstractRepository
     }
 
     /**
-     * Retourne toutes les entités, éventuellement triées.
-     *
-     * @param array|null $orderBy ['prop' => 'ASC'|'DESC']
-     *
-     * @return array<AbstractEntity>
-     */
-    public function findAll(?array $orderBy = null): array
-    {
-        return $this->findBy([], $orderBy);
-    }
-
-    /**
      * Recherche des entités selon des critères d'égalité.
      *
      * @param array $criteria ['property' => $value]
