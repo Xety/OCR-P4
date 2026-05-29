@@ -41,6 +41,7 @@ $stmt = $pdo->prepare('
 ');
 
 $aliceId = null;
+$bobId = null;
 
 foreach ($users as $i => [$name, $email, $password]) {
     $stmt->execute([
@@ -55,6 +56,10 @@ foreach ($users as $i => [$name, $email, $password]) {
     if ($i === 0) {
         $aliceId = (int) $row['id'];
     }
+
+    if ($i === 1) {
+        $bobId = (int) $row['id'];
+    }
 }
 
 echo "\nUtilisateurs seedés";
@@ -63,8 +68,8 @@ echo "\nUtilisateurs seedés";
 $books = [
     [$aliceId, 'Le Petit Prince', 'Antoine de Saint-Exupéry', 'Un aviateur tombe en panne dans le désert et rencontre un mystérieux petit garçon venu d\'une autre planète.', '07fe9b78c2127b8e1bd993e0723f9cc276843351.jpg', true],
     [$aliceId, 'L\'Alchimiste', 'Paulo Coelho', 'Le voyage initiatique d\'un jeune berger andalou à la recherche d\'un trésor enfoui au pied des Pyramides.', '656fc6182eba025f87376ad891749e6498f08159.jpg', false],
-    [$aliceId, 'The Kinkfolk Table', 'Nathan Williams', 'J\'ai récemment plongé dans les pages de \'The Kinkfolk Table\' et j\'ai été enchanté par chaque recette.', '3464b64a922f7d911d69633167d3700d8c0b3049.jpg', true],
-    [$aliceId, 'Harry Potter à l\'école', 'J.K. Rowling', 'Un jeune garçon découvre le jour de ses onze ans qu\'il est un sorcier et intègre l\'école de Poudlard.', 'a51e4e8d4f0a8f949ffc36f695d46fb1f5d7bf03.jpg', false],
+    [$bobId, 'The Kinkfolk Table', 'Nathan Williams', 'J\'ai récemment plongé dans les pages de \'The Kinkfolk Table\' et j\'ai été enchanté par chaque recette.', '3464b64a922f7d911d69633167d3700d8c0b3049.jpg', true],
+    [$bobId, 'Harry Potter à l\'école', 'J.K. Rowling', 'Un jeune garçon découvre le jour de ses onze ans qu\'il est un sorcier et intègre l\'école de Poudlard.', 'a51e4e8d4f0a8f949ffc36f695d46fb1f5d7bf03.jpg', false],
 ];
 
 $stmtBook = $pdo->prepare('
