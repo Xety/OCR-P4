@@ -2,3 +2,4 @@
 .env
 composer.lock
 public/images/books/*
+public/images/avatars/*
