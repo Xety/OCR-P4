@@ -10,7 +10,7 @@
     <div class="card account-profile">
         <div class="account-avatar">
             <img
-                src="/images/icon-user.svg"
+                src="<?= $user->getAvatar() !== null ? '/images/avatars/' . e($user->getAvatar()) : '/images/icon-user.svg' ?>"
                 alt="Avatar de <?= e($user->getName()) ?>"
                 class="account-avatar__img"
             />
